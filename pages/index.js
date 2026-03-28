@@ -39,25 +39,57 @@ const VERIFICATION_QUESTIONS = [
 const CAL_VERIFICATION = {
   name: "Callum",
   question: "Who did you come to London with?",
-  accept: ["areeb", "areeb and dad", "dad and areeb", "areeb and daddy", "daddy and areeb", "with areeb", "dad", "daddy"],
+  accept: ["areeb", "areeb and dad", "dad and areeb", "areeb and daddy", "daddy and areeb", "with areeb"],
 };
 
-const LOCATION_IMAGES = {
-  bigben: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Clock_Tower_-_Palace_of_Westminster%2C_London_-_May_2007.jpg/440px-Clock_Tower_-_Palace_of_Westminster%2C_London_-_May_2007.jpg",
-  tower: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tower_of_London_-_01.jpg/560px-Tower_of_London_-_01.jpg",
-  stpauls: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/St_Pauls_Cathedral_from_West_adj.jpg/480px-St_Pauls_Cathedral_from_West_adj.jpg",
-  buckingham: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Buckingham_Palace%2C_London_-_April_2009.jpg/560px-Buckingham_Palace%2C_London_-_April_2009.jpg",
-};
+const LOCATION_DATA = [
+  {
+    key: "bigben",
+    label: "The Elizabeth Tower (Big Ben)",
+    img: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=600&h=300&fit=crop",
+  },
+  {
+    key: "tower",
+    label: "The Tower of London",
+    img: "https://images.unsplash.com/photo-1574002280743-6b7f67ef1744?w=600&h=300&fit=crop",
+  },
+  {
+    key: "stpauls",
+    label: "St. Paul's Cathedral",
+    img: "https://images.unsplash.com/photo-1583422409516-2895a77efded?w=600&h=300&fit=crop",
+  },
+  {
+    key: "buckingham",
+    label: "Buckingham Palace",
+    img: "https://images.unsplash.com/photo-1596386461350-326ccb383831?w=600&h=300&fit=crop",
+  },
+];
 
 const SCREENS = [
   {
-    id: "confirm",
+    id: "intro",
+    lines: [
+      { text: "CLOCKTOWER OPERATIONS", style: "header" },
+      { text: "SECURE CHANNEL", style: "sub" },
+      { text: "", style: "spacer" },
+      { text: "Incoming transmission...", style: "dim", delay: 1000 },
+      { text: "", style: "spacer" },
+      { text: "Hello, agents.", style: "normal", delay: 600 },
+      { text: "", style: "spacer" },
+      { text: "My name is Tru.", style: "bold" },
+      { text: "", style: "spacer" },
+      { text: "Some of you may know me from the City Spies. I've worked with young agents before \u2014 some of the best I've ever trained, in fact.", style: "normal" },
+      { text: "", style: "spacer" },
+      { text: "Now I need a new team. And I think I've found one.", style: "normal" },
+      { text: "", style: "spacer" },
+      { text: "But first \u2014 I need to make sure you are who I think you are.", style: "bold" },
+    ],
+  },
+  {
+    id: "mission",
     lines: [
       { text: "\u26a0 PRIORITY BRIEFING \u26a0", style: "warning" },
       { text: "OPERATION CLOCKTOWER", style: "header" },
-      { text: "", style: "spacer" },
-      { text: "Agents,", style: "normal" },
-      { text: "Listen carefully.", style: "normal" },
       { text: "", style: "spacer" },
       { text: "Over 100 years ago, a brilliant clockmaker named \u00c9mile Bellecourt built secret mechanisms into the great clocks and towers of London.", style: "normal" },
       { text: "", style: "spacer" },
@@ -116,6 +148,20 @@ const SCREENS = [
     ],
   },
   {
+    id: "howto",
+    lines: [
+      { text: "HOW THIS WORKS", style: "header" },
+      { text: "", style: "spacer" },
+      { text: "Your mom and dad will take you around London. As you go to different places, check back in here with me to see if there might be clues to find.", style: "normal" },
+      { text: "", style: "spacer" },
+      { text: "Not every area will have a clue \u2014 that's ok. You need to act like tourists to blend in. The Collector is watching.", style: "normal" },
+      { text: "", style: "spacer" },
+      { text: "Check with me as you go around the city and I'll point out if there are any clues you might want to look out for.", style: "normal" },
+      { text: "", style: "spacer" },
+      { text: "Here are some places I think you should check out:", style: "bold" },
+    ],
+  },
+  {
     id: "clocks",
     isLocationScreen: true,
     lines: [],
@@ -131,9 +177,7 @@ const SCREENS = [
       { text: "", style: "spacer" },
       { text: '"Tru, we have arrived."', style: "bold" },
       { text: "", style: "spacer" },
-      { text: "3. I'll give you your first mission.", style: "normal" },
-      { text: "", style: "spacer" },
-      { text: "You will choose your codenames when you check in.", style: "normal" },
+      { text: "3. I'll verify Callum, assign your codenames, and give you your first mission.", style: "normal" },
     ],
   },
   {
@@ -200,17 +244,11 @@ function TypedLine({ text, style, onDone }) {
 function LocationScreen({ onComplete }) {
   const [loaded, setLoaded] = useState({});
   const [revealed, setRevealed] = useState(0);
-  const locations = [
-    { key: "bigben", label: "The Elizabeth Tower (Big Ben)", img: LOCATION_IMAGES.bigben },
-    { key: "tower", label: "The Tower of London", img: LOCATION_IMAGES.tower },
-    { key: "stpauls", label: "St. Paul's Cathedral", img: LOCATION_IMAGES.stpauls },
-    { key: "buckingham", label: "Buckingham Palace", img: LOCATION_IMAGES.buckingham },
-  ];
 
   useEffect(() => {
     const t = setInterval(() => {
       setRevealed(p => {
-        if (p >= locations.length) { clearInterval(t); return p; }
+        if (p >= LOCATION_DATA.length) { clearInterval(t); return p; }
         return p + 1;
       });
     }, 600);
@@ -218,24 +256,15 @@ function LocationScreen({ onComplete }) {
   }, []);
 
   useEffect(() => {
-    if (revealed >= locations.length) {
+    if (revealed >= LOCATION_DATA.length) {
       setTimeout(() => onComplete?.(), 800);
     }
   }, [revealed]);
 
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: "24px 20px" }}>
-      <div style={{ color: "#e0e0e0", fontFamily: "'Courier New', monospace", fontSize: 20, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8 }}>
-        THE CLOCKS OF LONDON
-      </div>
-      <div style={{ color: "#c8c8c8", fontFamily: "'Courier New', monospace", fontSize: 15, lineHeight: 1.6, marginBottom: 8 }}>
-        Bellecourt hid his fragments inside the mechanisms of London's greatest clocks and towers.
-      </div>
-      <div style={{ color: "#c8c8c8", fontFamily: "'Courier New', monospace", fontSize: 15, lineHeight: 1.6, marginBottom: 20 }}>
-        These locations may contain them:
-      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {locations.slice(0, revealed).map((loc) => (
+        {LOCATION_DATA.slice(0, revealed).map((loc) => (
           <div key={loc.key} style={{
             background: "#111",
             border: "1px solid #333",
@@ -270,11 +299,6 @@ function LocationScreen({ onComplete }) {
           </div>
         ))}
       </div>
-      {revealed >= locations.length && (
-        <div style={{ color: "#c8c8c8", fontFamily: "'Courier New', monospace", fontSize: 15, lineHeight: 1.6, marginTop: 20 }}>
-          As you explore London, check in with me. I'll help you figure out what to look for at each one.
-        </div>
-      )}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
@@ -353,7 +377,7 @@ function VerificationScreen({ onVerified }) {
           {"\u2713"} IDENTITY CONFIRMED
         </div>
         <div style={{ color: "#777", fontFamily: "monospace", fontSize: 13, marginTop: 12, letterSpacing: 2, textAlign: "center" }}>
-          Welcome, agents.
+          Welcome, Cade and Maggie.
         </div>
         <div style={{ color: "#333", fontFamily: "monospace", fontSize: 12, marginTop: 24, letterSpacing: 2 }}>
           DECRYPTING BRIEFING...
@@ -374,22 +398,19 @@ function VerificationScreen({ onVerified }) {
       </div>
 
       <div style={{ marginBottom: 16 }}>
-        <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 15, marginBottom: 4 }}>
-          Cade McKenna {"\u2014"} {verified[0] ? "\u2713 VERIFIED" : "IDENTIFIED"}
-        </div>
-        <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 15, marginBottom: 16 }}>
-          Maggie McKenna {"\u2014"} {verified[1] ? "\u2713 VERIFIED" : "IDENTIFIED"}
-        </div>
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
         <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2, marginBottom: 12 }}>
           {"\u26a0"} IDENTITY VERIFICATION REQUIRED
         </div>
         <div style={{ color: "#aaa", fontFamily: "monospace", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
-          We need to confirm that you {"\u2014"} and not rival spies {"\u2014"} are reading this. Each agent must answer a question that only the real Cade and Maggie would know.
+          We need to confirm that you {"\u2014"} and not rival spies {"\u2014"} are reading this. Each agent must answer a question that only they would know.
         </div>
       </div>
+
+      {verified[0] && (
+        <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 15, marginBottom: 16 }}>
+          Cade McKenna {"\u2014"} {"\u2713"} VERIFIED
+        </div>
+      )}
 
       <div style={{ marginBottom: 24 }}>
         <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 14, marginBottom: 8 }}>
@@ -442,7 +463,7 @@ function VerificationScreen({ onVerified }) {
       </div>
 
       <div style={{ color: "#333", fontFamily: "monospace", fontSize: 11, letterSpacing: 1 }}>
-        {step + 1} of {VERIFICATION_QUESTIONS.length} agents verified
+        {verified[0] ? "1 of 2" : "0 of 2"} agents verified
       </div>
     </div>
   );
@@ -467,7 +488,7 @@ function CalVerificationScreen({ onVerified }) {
     return (
       <div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
         <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, textAlign: "center" }}>
-          {"\u2713"} AGENT FOX VERIFIED
+          {"\u2713"} ALL AGENTS VERIFIED
         </div>
         <div style={{ color: "#777", fontFamily: "monospace", fontSize: 13, marginTop: 12, letterSpacing: 2, textAlign: "center" }}>
           The team is complete.
@@ -556,12 +577,100 @@ function CalVerificationScreen({ onVerified }) {
   );
 }
 
+function CodenameScreen({ onComplete }) {
+  const [step, setStep] = useState(0);
+  const [confirmed, setConfirmed] = useState([false, false, false]);
+  const agents = [
+    { name: "Cade", codename: "JAGUAR", desc: "Silent. Sharp. The apex predator of codebreaking." },
+    { name: "Maggie", codename: "OTTER", desc: "Quick, curious, and impossible to fool. Nothing escapes your notice." },
+    { name: "Callum", codename: "STINGRAY", desc: "Glides under the radar. Strikes when no one expects it." },
+  ];
+
+  const confirm = () => {
+    const nc = [...confirmed];
+    nc[step] = true;
+    setConfirmed(nc);
+    if (step < 2) {
+      setTimeout(() => setStep(step + 1), 600);
+    } else {
+      setTimeout(() => onComplete(), 1500);
+    }
+  };
+
+  return (
+    <div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column", padding: 24, overflowY: "auto" }}>
+      <div style={{ color: "#e0e0e0", fontFamily: "monospace", fontSize: 20, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>
+        CODENAME ASSIGNMENT
+      </div>
+      <div style={{ color: "#aaa", fontFamily: "monospace", fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>
+        I've selected codenames for each of you based on your skills. From this point forward, these are your identities.
+      </div>
+
+      {agents.map((a, i) => (
+        <div key={a.name} style={{
+          marginBottom: 16,
+          padding: 16,
+          background: i <= step ? "#111" : "#0a0a0a",
+          border: confirmed[i] ? "1px solid #4ade80" : i === step ? "1px solid #facc15" : "1px solid #222",
+          borderRadius: 10,
+          opacity: i <= step ? 1 : 0.3,
+          transition: "all 0.4s ease",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <span style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>
+              {a.name}
+            </span>
+            {confirmed[i] && (
+              <span style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 12 }}>{"\u2713"} CONFIRMED</span>
+            )}
+          </div>
+          <div style={{ color: "#fff", fontFamily: "monospace", fontSize: 18, fontWeight: 900, letterSpacing: 3, marginBottom: 6 }}>
+            {i <= step ? a.codename : "???"}
+          </div>
+          {i <= step && (
+            <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, lineHeight: 1.5 }}>
+              {a.desc}
+            </div>
+          )}
+          {i === step && !confirmed[i] && (
+            <button
+              onClick={confirm}
+              style={{
+                marginTop: 12,
+                background: "#facc15",
+                color: "#000",
+                border: "none",
+                borderRadius: 8,
+                padding: "8px 20px",
+                fontFamily: "monospace",
+                fontWeight: 700,
+                fontSize: 13,
+                cursor: "pointer",
+              }}
+            >
+              {a.name === "Callum" ? "CONFIRM (Cal, tap here!)" : `CONFIRM \u2014 ${a.name}, accept your codename`}
+            </button>
+          )}
+        </div>
+      ))}
+
+      {confirmed[2] && (
+        <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 15, fontWeight: 700, textAlign: "center", marginTop: 16, letterSpacing: 2, animation: "pulse 2s infinite" }}>
+          ALL AGENTS CONFIRMED. STANDBY...
+        </div>
+      )}
+      <style>{`@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }`}</style>
+    </div>
+  );
+}
+
 function ChatInterface() {
-  const [msgs, setMsgs] = useState([]);
+  const [msgs, setMsgs] = useState([{
+    role: "spy",
+    text: "Jaguar. Otter. Stingray.\n\nYou're officially active.\n\nYour mom and dad will take you around London today. As you visit different places, check in with me here. I'll let you know if there are any clues worth looking for.\n\nNot every location will have something \u2014 that's ok. You need to act like tourists to blend in. The Collector is watching, and he can't know we're onto him.\n\nWhen you get somewhere, just tell me where you are. I'll take it from there.\n\nStay sharp, agents.\n\n\u2014 Tru"
+  }]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showCalVerify, setShowCalVerify] = useState(false);
-  const [calVerified, setCalVerified] = useState(false);
   const chatRef = useRef(null);
 
   useEffect(() => {
@@ -573,24 +682,15 @@ function ChatInterface() {
     const userMsg = input.trim();
     setInput("");
     setMsgs(p => [...p, { role: "user", text: userMsg }]);
-
-    const lower = userMsg.toLowerCase();
-
-    if (!calVerified && (lower.includes("arrived") || lower.includes("we're here") || lower.includes("we are here"))) {
-      setShowCalVerify(true);
-      return;
-    }
-
     setLoading(true);
 
     setTimeout(() => {
       let response;
-      if (lower.includes("arrived") || lower.includes("we're here") || lower.includes("we are here")) {
-        response = "Welcome to London, agents. The full team is verified and accounted for.\n\nBefore we begin \u2014 every agent needs a codename. Your real names are classified from this point forward.\n\nEach of you, tell me: what do you want to be called?\n\n\u2014 Tru";
-      } else if (lower.includes("tower of london") || lower.includes("tower of")) {
-        response = "The Tower of London. Excellent.\n\nBellecourt visited this fortress in 1891. He was obsessed with its clocks \u2014 particularly the mechanism in the Waterloo Block.\n\nHere's your mission:\n\n\ud83d\udd0d SCOUT (Maggie): Find the oldest inscription you can see on any wall near you. What year is carved into it?\n\n\ud83e\udde9 CODEBREAKER (Cade): Somewhere nearby is a plaque that mentions a famous prisoner. Find their name \u2014 the first letter is part of our code.\n\n\ud83c\udfad CHARM (Cal): The Collector's surveillance cameras are everywhere. To scramble them, I need Agent Fox to stand like a palace guard for 10 seconds without smiling. Can he do it?\n\nReport back when you've completed all three tasks.\n\n\u2014 Tru";
+      const lower = userMsg.toLowerCase();
+      if (lower.includes("tower of london") || lower.includes("tower of")) {
+        response = "The Tower of London. Excellent.\n\nBellecourt visited this fortress in 1891. He was obsessed with its clocks \u2014 particularly the mechanism in the Waterloo Block.\n\nHere's your mission:\n\n\ud83d\udd0d OTTER: Find the oldest inscription you can see on any wall near you. What year is carved into it?\n\n\ud83e\udde9 JAGUAR: Somewhere nearby is a plaque that mentions a famous prisoner. Find their name \u2014 the first letter is part of our code.\n\n\ud83c\udfad STINGRAY: The Collector's surveillance cameras are everywhere. To scramble them, I need Stingray to stand like a palace guard for 10 seconds without smiling. Can he do it?\n\nReport back when you've completed all three tasks.\n\n\u2014 Tru";
       } else if (lower.includes("big ben") || lower.includes("westminster") || lower.includes("parliament")) {
-        response = "You're standing in front of Bellecourt's masterwork.\n\nThe Elizabeth Tower \u2014 most people call it Big Ben, but Big Ben is actually just the bell inside. Bellecourt knew that. He hid his first fragment in the clock's design itself.\n\nHere's your mission:\n\n\ud83d\udcf8 PHOTO CHALLENGE: All three agents must pose in front of Big Ben. Each agent holds up fingers showing a different number:\n- The current hour in London\n- The current hour in San Francisco\n- The difference between them\n\nGet it right, and you've unlocked Fragment 1.\n\n\ud83d\udd0d SCOUT (Maggie): While you're here \u2014 can you hear any street performers nearby? The Collector sometimes hides messages in music. Report what you hear.\n\nGo.\n\n\u2014 Tru";
+        response = "You're standing in front of Bellecourt's masterwork.\n\nThe Elizabeth Tower \u2014 most people call it Big Ben, but Big Ben is actually just the bell inside. Bellecourt knew that. He hid his first fragment in the clock's design itself.\n\nHere's your mission:\n\n\ud83d\udcf8 PHOTO CHALLENGE: All three agents must pose in front of Big Ben. Each agent holds up fingers showing a different number:\n- The current hour in London\n- The current hour in San Francisco\n- The difference between them\n\nGet it right, and you've unlocked Fragment 1.\n\n\ud83d\udd0d OTTER: While you're here \u2014 can you hear any street performers nearby? The Collector sometimes hides messages in music. Report what you hear.\n\nGo.\n\n\u2014 Tru";
       } else if (lower.includes("st pancras") || lower.includes("king's cross") || lower.includes("train station")) {
         response = "Agents \u2014 stop.\n\nI've just intercepted a transmission from The Collector. He's not in London anymore.\n\nHe left this morning. By train.\n\nI'm tracing the signal now... it's pointing south. Across the Channel.\n\nAgents, look at the departure boards. Do you see any trains heading to Paris?\n\nBellecourt didn't just work in London. He spent the last years of his life in Paris. That's where the final fragments must be.\n\nGrab your bags. We need to follow The Collector. Now.\n\n\u2014 Tru";
       } else {
@@ -601,19 +701,6 @@ function ChatInterface() {
     }, 1500);
   };
 
-  if (showCalVerify && !calVerified) {
-    return (
-      <CalVerificationScreen onVerified={() => {
-        setCalVerified(true);
-        setShowCalVerify(false);
-        setMsgs(p => [...p, {
-          role: "spy",
-          text: "Welcome to London, agents. The full team is verified and accounted for.\n\nBefore we begin \u2014 every agent needs a codename. Your real names are classified from this point forward.\n\nEach of you, tell me: what do you want to be called?\n\n\u2014 Tru"
-        }]);
-      }} />
-    );
-  }
-
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#0a0a0a" }}>
       <div style={{ padding: "12px 16px", borderBottom: "1px solid #222", display: "flex", alignItems: "center", gap: 10 }}>
@@ -621,13 +708,6 @@ function ChatInterface() {
         <span style={{ color: "#888", fontFamily: "monospace", fontSize: 13, letterSpacing: 2 }}>TRU {"\u2014"} SECURE CHANNEL</span>
       </div>
       <div ref={chatRef} style={{ flex: 1, overflowY: "auto", padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
-        {msgs.length === 0 && (
-          <div style={{ color: "#555", fontFamily: "monospace", fontSize: 13, textAlign: "center", marginTop: 40, lineHeight: 1.8 }}>
-            You're connected to Tru's secure channel.<br />
-            When your whole team is in London, type:<br />
-            <span style={{ color: "#facc15" }}>"Tru, we have arrived."</span>
-          </div>
-        )}
         {msgs.map((m, i) => (
           <div key={i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "85%" }}>
             <div style={{
@@ -693,6 +773,7 @@ function ChatInterface() {
 }
 
 export default function Home() {
+  // phases: verify -> briefing -> calverify -> codenames -> chat
   const [phase, setPhase] = useState("verify");
   const [screenIdx, setScreenIdx] = useState(0);
   const [screenDone, setScreenDone] = useState(false);
@@ -705,22 +786,46 @@ export default function Home() {
       setScreenIdx(s => s + 1);
       setScreenDone(false);
     } else {
-      setPhase("chat");
+      setPhase("calverify");
     }
   };
+
+  const pageHead = (title) => (
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+      </Head>
+      <style jsx global>{`
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body, #__next { height: 100%; background: #0a0a0a; }
+      `}</style>
+    </>
+  );
 
   if (phase === "verify") {
     return (
       <>
-        <Head>
-          <title>Clocktower Operations</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        </Head>
-        <style jsx global>{`
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          html, body, #__next { height: 100%; background: #0a0a0a; }
-        `}</style>
+        {pageHead("Clocktower Operations")}
         <VerificationScreen onVerified={() => setPhase("briefing")} />
+      </>
+    );
+  }
+
+  if (phase === "calverify") {
+    return (
+      <>
+        {pageHead("Agent Verification")}
+        <CalVerificationScreen onVerified={() => setPhase("codenames")} />
+      </>
+    );
+  }
+
+  if (phase === "codenames") {
+    return (
+      <>
+        {pageHead("Codename Assignment")}
+        <CodenameScreen onComplete={() => setPhase("chat")} />
       </>
     );
   }
@@ -728,14 +833,7 @@ export default function Home() {
   if (phase === "chat") {
     return (
       <>
-        <Head>
-          <title>Tru — Secure Channel</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        </Head>
-        <style jsx global>{`
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          html, body, #__next { height: 100%; background: #0a0a0a; }
-        `}</style>
+        {pageHead("Tru \u2014 Secure Channel")}
         <div style={{ height: "100vh", background: "#0a0a0a" }}>
           <ChatInterface />
         </div>
@@ -743,36 +841,20 @@ export default function Home() {
     );
   }
 
+  // Briefing phase
   if (currentScreen.isLocationScreen) {
     return (
       <>
-        <Head>
-          <title>Clocktower Operations</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        </Head>
-        <style jsx global>{`
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          html, body, #__next { height: 100%; background: #0a0a0a; }
-        `}</style>
+        {pageHead("Clocktower Operations")}
         <div
           onClick={() => { if (screenDone) advance(); }}
           style={{
-            height: "100vh",
-            background: "#0a0a0a",
-            display: "flex",
-            flexDirection: "column",
-            cursor: screenDone ? "pointer" : "default",
-            userSelect: "none",
-            position: "relative",
+            height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column",
+            cursor: screenDone ? "pointer" : "default", userSelect: "none", position: "relative",
           }}
         >
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "#222" }}>
-            <div style={{
-              height: "100%",
-              background: "#facc15",
-              width: `${((screenIdx + 1) / SCREENS.length) * 100}%`,
-              transition: "width 0.5s ease",
-            }} />
+            <div style={{ height: "100%", background: "#facc15", width: `${((screenIdx + 1) / SCREENS.length) * 100}%`, transition: "width 0.5s ease" }} />
           </div>
           <LocationScreen onComplete={() => setScreenDone(true)} />
           {screenDone && (
@@ -790,33 +872,16 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Clocktower Operations</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-      </Head>
-      <style jsx global>{`
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body, #__next { height: 100%; background: #0a0a0a; }
-      `}</style>
+      {pageHead("Clocktower Operations")}
       <div
         onClick={advance}
         style={{
-          height: "100vh",
-          background: "#0a0a0a",
-          display: "flex",
-          flexDirection: "column",
-          cursor: screenDone ? "pointer" : "default",
-          userSelect: "none",
-          position: "relative",
+          height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column",
+          cursor: screenDone ? "pointer" : "default", userSelect: "none", position: "relative",
         }}
       >
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "#222" }}>
-          <div style={{
-            height: "100%",
-            background: "#facc15",
-            width: `${((screenIdx + 1) / SCREENS.length) * 100}%`,
-            transition: "width 0.5s ease",
-          }} />
+          <div style={{ height: "100%", background: "#facc15", width: `${((screenIdx + 1) / SCREENS.length) * 100}%`, transition: "width 0.5s ease" }} />
         </div>
 
         <Screen key={screenIdx} screen={currentScreen} onComplete={() => setScreenDone(true)} />
