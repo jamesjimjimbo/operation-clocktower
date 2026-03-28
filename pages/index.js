@@ -40,7 +40,7 @@ const VERIFICATION_QUESTIONS = [
 
 const CAL_VERIFICATION = {
   name: "Callum",
-  question: "Who did you come to London with?",
+  question: "Who did you fly to London with?",
   accept: ["areeb", "areeb and dad", "dad and areeb", "areeb and daddy", "daddy and areeb", "with areeb"],
 };
 
@@ -56,10 +56,6 @@ const LOCATIONS = [
   { label: "St. Paul's Cathedral", img: "/images/stpauls.jpg", color: "#a855f7" },
   { label: "Buckingham Palace", img: "/images/buckingham.jpg", color: "#eab308" },
 ];
-
-// --- Briefing screens ---
-// Phase flow: passcode -> intro (Tru) -> verify -> briefing screens -> calverify -> codenames -> chat
-// Briefing screens are shown AFTER verification
 
 const SCREENS = [
   {
@@ -86,8 +82,6 @@ const SCREENS = [
       { text: "", style: "spacer" },
       { text: "We don't know who he is.", style: "normal" },
       { text: "We don't know how close he is.", style: "normal" },
-      { text: "", style: "spacer" },
-      { text: "But we know where he's heading.", style: "normal" },
     ],
   },
   {
@@ -197,7 +191,6 @@ function TypedLine({ text, style, onDone }) {
   );
 }
 
-// --- PASSCODE ---
 function PasscodeScreen({ onPass }) {
   const [code, setCode] = useState("");
   const [error, setError] = useState(false);
@@ -219,7 +212,6 @@ function PasscodeScreen({ onPass }) {
   );
 }
 
-// --- TRU INTRO (before verification) ---
 function IntroScreen({ onComplete }) {
   const lines = [
     { text: "OPERATION CLOCKTOWER", style: "header" },
@@ -258,7 +250,6 @@ function IntroScreen({ onComplete }) {
   );
 }
 
-// --- VERIFICATION ---
 function VerificationScreen({ onVerified }) {
   const [step, setStep] = useState(0);
   const [input, setInput] = useState("");
@@ -312,11 +303,10 @@ function VerificationScreen({ onVerified }) {
   );
 }
 
-// --- LONDON REVEAL ---
 function LondonRevealScreen({ onComplete }) {
-  const [stage, setStage] = useState(0); // 0=loading, 1=show
-  useEffect(() => { setTimeout(() => setStage(1), 300); }, []);
+  const [stage, setStage] = useState(0);
   const [done, setDone] = useState(false);
+  useEffect(() => { setTimeout(() => setStage(1), 300); }, []);
   useEffect(() => { if (stage === 1) setTimeout(() => setDone(true), 2500); }, [stage]);
   return (
     <div onClick={() => done && onComplete()} style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: done ? "pointer" : "default", userSelect: "none", padding: 24, position: "relative" }}>
@@ -326,10 +316,10 @@ function LondonRevealScreen({ onComplete }) {
             <img src="/images/london.jpg" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25, filter: "blur(2px)" }} />
           </div>
           <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-            <div style={{ color: "#c8c8c8", fontFamily: "'Courier New', monospace", fontSize: 15, marginBottom: 16, animation: "fadeIn 0.8s ease" }}>
+            <div style={{ color: "#c8c8c8", fontFamily: "'Courier New', monospace", fontSize: 15, marginBottom: 24, animation: "fadeIn 0.8s ease" }}>
               But we know where he's heading.
             </div>
-            <div style={{ color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 8, textTransform: "uppercase", animation: "fadeInUp 1s ease 0.5s both", textShadow: "0 0 40px rgba(250,204,21,0.4)" }}>
+            <div style={{ color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 52, fontWeight: 900, letterSpacing: 10, textTransform: "uppercase", animation: "fadeInUp 1s ease 0.5s both", textShadow: "0 0 40px rgba(250,204,21,0.4)" }}>
               LONDON
             </div>
           </div>
@@ -345,7 +335,6 @@ function LondonRevealScreen({ onComplete }) {
   );
 }
 
-// --- HOWTO + LOCATIONS (combined single screen) ---
 function HowtoLocationsScreen({ onComplete }) {
   const [textDone, setTextDone] = useState(false);
   const [revealed, setRevealed] = useState(0);
@@ -385,13 +374,9 @@ function HowtoLocationsScreen({ onComplete }) {
         {textDone && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 16 }}>
             {LOCATIONS.slice(0, revealed).map((loc) => (
-              <div key={loc.label} style={{
-                background: "#111", border: "1px solid #333", borderRadius: 10, overflow: "hidden",
-                animation: "fadeIn 0.4s ease",
-              }}>
-                <div style={{ width: "100%", aspectRatio: "4/3", overflow: "hidden", background: "#0a0a0a", position: "relative" }}>
-                  <img src={loc.img} alt={loc.label} style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    onError={e => { e.target.style.display = "none"; }} />
+              <div key={loc.label} style={{ background: "#111", border: "1px solid #333", borderRadius: 10, overflow: "hidden", animation: "fadeIn 0.4s ease" }}>
+                <div style={{ width: "100%", aspectRatio: "4/3", overflow: "hidden", background: "#0a0a0a" }}>
+                  <img src={loc.img} alt={loc.label} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
                 </div>
                 <div style={{ padding: "8px 10px" }}>
                   <div style={{ color: loc.color, fontFamily: "'Courier New', monospace", fontSize: 11, fontWeight: 700, letterSpacing: 1 }}>{loc.label}</div>
@@ -410,7 +395,6 @@ function HowtoLocationsScreen({ onComplete }) {
   );
 }
 
-// --- CAL VERIFICATION ---
 function CalVerificationScreen({ onVerified }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
@@ -454,7 +438,6 @@ function CalVerificationScreen({ onVerified }) {
   );
 }
 
-// --- CODENAMES ---
 function CodenameScreen({ onComplete }) {
   const [step, setStep] = useState(0);
   const [confirmed, setConfirmed] = useState([false, false, false]);
@@ -511,7 +494,6 @@ function CodenameScreen({ onComplete }) {
   );
 }
 
-// --- CHAT ---
 function ChatInterface({ codenames }) {
   const c0 = codenames?.[0] || "JAGUAR", c1 = codenames?.[1] || "OTTER", c2 = codenames?.[2] || "STINGRAY";
   const [msgs, setMsgs] = useState([{
@@ -522,11 +504,14 @@ function ChatInterface({ codenames }) {
   const [loading, setLoading] = useState(false);
   const chatRef = useRef(null);
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [msgs, loading]);
+
   const send = async () => {
     if (!input.trim() || loading) return;
-    const userMsg = input.trim(); setInput("");
+    const userMsg = input.trim();
+    setInput("");
     const newMsgs = [...msgs, { role: "user", text: userMsg }];
-    setMsgs(newMsgs); setLoading(true);
+    setMsgs(newMsgs);
+    setLoading(true);
     try {
       const apiMessages = newMsgs.map(m => ({
         role: m.role === "spy" ? "assistant" : "user",
@@ -539,15 +524,16 @@ function ChatInterface({ codenames }) {
       });
       const data = await res.json();
       if (data.text) {
-        setMsgs(p => [...p, { role: "spy", text: data.text }]);
+        setMsgs(prev => [...prev, { role: "spy", text: data.text }]);
       } else {
-        setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again in a moment. \u2014 Tru" }]);
+        setMsgs(prev => [...prev, { role: "spy", text: "Signal interference. Try again in a moment. \u2014 Tru" }]);
       }
     } catch (err) {
-      setMsgs(p => [...p, { role: "spy", text: "Secure channel disrupted. Check your connection and try again. \u2014 Tru" }]);
+      setMsgs(prev => [...prev, { role: "spy", text: "Secure channel disrupted. Check your connection and try again. \u2014 Tru" }]);
     }
     setLoading(false);
   };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#0a0a0a" }}>
       <div style={{ padding: "12px 16px", borderBottom: "1px solid #222", display: "flex", alignItems: "center", gap: 10 }}>
@@ -571,7 +557,6 @@ function ChatInterface({ codenames }) {
   );
 }
 
-// --- BRIEFING SCREEN (generic typed lines) ---
 function BriefingScreen({ screen, onComplete }) {
   const [vis, setVis] = useState(0);
   const [done, setDone] = useState(false);
@@ -590,9 +575,7 @@ function BriefingScreen({ screen, onComplete }) {
   );
 }
 
-// --- MAIN APP ---
 export default function Home() {
-  // passcode -> intro -> verify -> briefing -> calverify -> codenames -> chat
   const [phase, setPhase] = useState("passcode");
   const [screenIdx, setScreenIdx] = useState(0);
   const [screenDone, setScreenDone] = useState(false);
@@ -619,8 +602,6 @@ export default function Home() {
   if (phase === "codenames") return <>{head("Codename Assignment")}<CodenameScreen onComplete={(n) => { setCodenames(n); setPhase("chat"); }} /></>;
   if (phase === "chat") return <>{head("Tru \u2014 Secure Channel")}<div style={{ height: "100vh", background: "#0a0a0a" }}><ChatInterface codenames={codenames} /></div></>;
 
-  // --- BRIEFING PHASE ---
-  // Special screens
   if (cur.isLondonReveal) {
     return <>{head("Operation Clocktower")}<LondonRevealScreen onComplete={() => { setScreenDone(false); setScreenIdx(s => s + 1); }} /></>;
   }
@@ -628,7 +609,6 @@ export default function Home() {
     return <>{head("Operation Clocktower")}<HowtoLocationsScreen onComplete={() => { setScreenDone(false); setScreenIdx(s => s + 1); }} /></>;
   }
 
-  // Generic typed briefing screen
   return (
     <>{head("Operation Clocktower")}
       <div onClick={advance} style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column", cursor: screenDone ? "pointer" : "default", userSelect: "none", position: "relative" }}>
