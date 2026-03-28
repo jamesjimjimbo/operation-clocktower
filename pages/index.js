@@ -522,22 +522,31 @@ function ChatInterface({ codenames }) {
   const [loading, setLoading] = useState(false);
   const chatRef = useRef(null);
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [msgs, loading]);
-  const send = () => {
+  const send = async () => {
     if (!input.trim() || loading) return;
-    const userMsg = input.trim(); setInput(""); setMsgs(p => [...p, { role: "user", text: userMsg }]); setLoading(true);
-    setTimeout(() => {
-      let r; const l = userMsg.toLowerCase();
-      if (l.includes("tower of london")) {
-        r = `The Tower of London. Excellent.\n\nBellecourt visited this fortress in 1891.\n\n\ud83d\udd0d ${c1}: Find the oldest inscription on any wall near you. What year?\n\n\ud83e\udde9 ${c0}: Find a plaque mentioning a famous prisoner. The first letter of their name is part of our code.\n\n\ud83c\udfad ${c2}: Stand like a palace guard for 10 seconds without smiling. Go.\n\nReport back.\n\n\u2014 Tru`;
-      } else if (l.includes("big ben") || l.includes("westminster") || l.includes("parliament")) {
-        r = `Bellecourt's masterwork.\n\nFun fact: Big Ben is actually the bell inside, not the tower.\n\n\ud83d\udcf8 PHOTO CHALLENGE: All three agents pose. Each holds up fingers:\n- Current hour in London\n- Current hour in San Francisco\n- The difference\n\nGet it right = Fragment 1.\n\n\ud83d\udd0d ${c1}: Hear any street performers? The Collector hides messages in music.\n\n\u2014 Tru`;
-      } else if (l.includes("st pancras") || l.includes("king's cross")) {
-        r = `Good, you're here.\n\nLook up. See the great clock hanging at the top of the glass ceiling? That was made by Dent of London \u2014 the same company that built Big Ben's clock. Bellecourt knew the Dent clockmakers personally.\n\nTell me: what time does the clock show right now?`;
+    const userMsg = input.trim(); setInput("");
+    const newMsgs = [...msgs, { role: "user", text: userMsg }];
+    setMsgs(newMsgs); setLoading(true);
+    try {
+      const apiMessages = newMsgs.map(m => ({
+        role: m.role === "spy" ? "assistant" : "user",
+        content: m.text,
+      }));
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+      const data = await res.json();
+      if (data.text) {
+        setMsgs(p => [...p, { role: "spy", text: data.text }]);
       } else {
-        r = `Copy that, agents. Stay alert.\n\nTell me where you are or what you see. I'll let you know if there's anything worth investigating.\n\n\u2014 Tru`;
+        setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again in a moment. \u2014 Tru" }]);
       }
-      setMsgs(p => [...p, { role: "spy", text: r }]); setLoading(false);
-    }, 1500);
+    } catch (err) {
+      setMsgs(p => [...p, { role: "spy", text: "Secure channel disrupted. Check your connection and try again. \u2014 Tru" }]);
+    }
+    setLoading(false);
   };
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#0a0a0a" }}>
