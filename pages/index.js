@@ -17,19 +17,29 @@ function usePersist(key, initial) {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     if (params.get("paris") === "1") {
-      setPhase("active");
-      setVisited(["bigben","tower","stpauls","buckingham","eye"]);
-      setWordClues([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]);
-      setFragments(["92","02","45","","",""]);
-      setParisUnlocked(true);
-      setView("chat");
-      setMsgs([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nWelcome to Paris, agents. The Collector is here. The final fragments are hidden in the city.\n\nTell me where you are.\n\n\u2014 Tru"}]);
-      window.history.replaceState({}, "", window.location.pathname);
+      localStorage.setItem("oct_phase", JSON.stringify("active"));
+      localStorage.setItem("oct_vis", JSON.stringify(["bigben","tower","stpauls","buckingham","eye"]));
+      localStorage.setItem("oct_wc", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
+      localStorage.setItem("oct_fr", JSON.stringify(["92","02","45","","",""]));
+      localStorage.setItem("oct_pu", JSON.stringify(true));
+      localStorage.setItem("oct_ms", JSON.stringify([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nWelcome to Paris, agents. The Collector is here. The final fragments are hidden in the city.\n\nTell me where you are.\n\n\u2014 Tru"}]));
+      window.location.href = window.location.pathname;
+      return;
+    }
+    if (params.get("london") === "1") {
+      localStorage.setItem("oct_phase", JSON.stringify("active"));
+      localStorage.setItem("oct_vis", JSON.stringify([]));
+      localStorage.setItem("oct_wc", JSON.stringify([]));
+      localStorage.setItem("oct_fr", JSON.stringify(["","","","","",""]));
+      localStorage.setItem("oct_pu", JSON.stringify(false));
+      localStorage.setItem("oct_ms", JSON.stringify([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nYou're officially active.\n\nYour mom and dad will take you around London for a few days. Act like tourists \u2014 check out the sites, eat good food, have fun.\n\nBut when you find yourselves at landmarks \u2014 clocks, towers, churches, maybe other things \u2014 check in with me here.\n\nWhen you get somewhere, tell me where you are.\n\n\u2014 Tru"}]));
+      window.location.href = window.location.pathname;
+      return;
     }
     if (params.get("reset") === "1") {
       localStorage.clear();
-      window.history.replaceState({}, "", window.location.pathname);
-      window.location.reload();
+      window.location.href = window.location.pathname;
+      return;
     }
   }, []);
 
