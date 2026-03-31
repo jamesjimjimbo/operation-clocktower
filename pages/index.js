@@ -24,9 +24,9 @@ const VQS = [
   { name: "Maggie", q: "What song are you learning to play in music class?", a: ["seven nation army","7 nation army","seven nations army","7 nations army"] },
 ];
 const AGENTS = [
-  { name: "Cade", code: "JAGUAR", role: "The Codebreaker", desc: "Cracks puzzles and ciphers.", img: `${IMG}/jaguar.png` },
-  { name: "Maggie", code: "OTTER", role: "The Scout", desc: "Notices what others miss.", img: `${IMG}/otter.png` },
-  { name: "Callum", code: "STINGRAY", role: "The Charm", desc: "No one suspects him.", img: `${IMG}/stingray.png` },
+  { name: "Cade", code: "JAGUAR", role: "The Codebreaker", desc: "Cracks puzzles and ciphers.", img: `${IMG}/Jaguar.png` },
+  { name: "Maggie", code: "OTTER", role: "The Scout", desc: "Notices what others miss.", img: `${IMG}/Otter.png` },
+  { name: "Callum", code: "STINGRAY", role: "The Charm", desc: "No one suspects him.", img: `${IMG}/Stingray.png` },
 ];
 const LOCS = [
   { id: "bigben", label: "Big Ben", color: "#3b82f6", img: `${IMG}/bigben.jpg` },
@@ -452,7 +452,17 @@ export default function Home() {
     if (b.special === "howto") return wrap(<HowtoLocs onDone={() => setBriefIdx(i => i + 1)} />);
     return wrap(<TS id={b.id} lines={b.lines} onDone={() => setBriefIdx(i => i + 1)} />);
   }
-  if (phase === "arrived") return wrap(<IS resetKey="arr" title="OPERATION CLOCKTOWER" subtitle="SECURE CHANNEL" prompt={'When your whole team is together in London, report in:\n"Tru, we have arrived."'} placeholder="Type your message..." buttonText="SEND" errMsg="Tru is waiting for your arrival report." onSubmit={v => { const l = v.toLowerCase(); if (l.includes("arrived") || l.includes("here") || l.includes("london") || l.includes("made it")) { setPhase("calverify"); return true; } return false; }} />);
+  if (phase === "arrived") return wrap(
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ color: "#e0e0e0", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 4, textAlign: "center" }}>OPERATION CLOCKTOWER</div>
+      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 12, letterSpacing: 4, marginBottom: 32, textAlign: "center" }}>SECURE CHANNEL</div>
+      <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 12px #4ade80", marginBottom: 24 }} />
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, lineHeight: 1.6, textAlign: "center", maxWidth: 300, marginBottom: 24 }}>
+        When you're with Callum, tap below to verify him. It's something only he'll know.
+      </div>
+      <button onClick={() => setPhase("calverify")} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "12px 32px", fontFamily: "monospace", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>VERIFY CALLUM</button>
+    </div>
+  );
   if (phase === "calverify") return wrap(<IS resetKey="cal" title="AGENT VERIFICATION" subtitle="ONE MORE AGENT TO CONFIRM" prompt="CALLUM, ANSWER THIS:\nWho did you fly to London with?" placeholder="Type your answer..." buttonText="VERIFY" errMsg="That's not right. Try again, agent." onSubmit={v => { if (calMatch(v)) { setPhase("codenames"); return true; } return false; }} />);
   if (phase === "codenames") return wrap(<CodenameReveal onDone={() => setPhase("active")} />);
   if (phase === "puzzle") return wrap(<Puzzle wordClues={wordClues} onSolved={() => { setParisUnlocked(true); setPhase("active"); setView("dossier"); }} />);
