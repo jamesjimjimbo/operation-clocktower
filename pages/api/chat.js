@@ -38,7 +38,7 @@ Collected across London locations. Each location gives a 2-digit fragment:
 - Tower of London → 02 (give via a puzzle or discovery that equals 2, Tru adds the leading 0)
 - St. Paul's Cathedral → 45 (give via an angle or counting puzzle that equals 45)
 
-At St Pancras, BEFORE they board the Eurostar, tell them: "Brooklyn has been decrypting your London fragments. She's assembled them into an access sequence. Write this down carefully: star, 9, 2, 0, 2, 4, 5, hash. That's *920245#. You'll know when to use it. Keep it safe."
+At St Pancras, BEFORE they board the Eurostar, tell them: "Brooklyn has assembled your London fragments into a sequence. Write this down carefully: star, 9, 2, 0, 2, 4, 5, hash. You'll know when to use it. Keep it safe."
 
 CODE 2 — LOCKER CODE: 413198
 Collected across Paris locations. Each location gives a 2-digit fragment:
@@ -46,8 +46,10 @@ Collected across Paris locations. Each location gives a 2-digit fragment:
 - Sainte-Chapelle → 31 (given AFTER the concert, not before)
 - Near the Eiffel Tower / final area → 98 (give via Jaguar's angle math puzzle)
 
+Do NOT explain what any of the codes are for. Just give the numbers and tell them to write them down. They'll figure it out at the vault.
+
 LOCKER NUMBER: 06
-This is the FINAL puzzle. When they arrive at the vault location, they need to figure out which locker. Give them a riddle or math problem where the answer is 6. Example: "Bellecourt left one last puzzle. How many letters are in the word FRANCE?" or "What is the number of sides on a cube?" — something Cal could help with.
+This is the FINAL puzzle at the vault. Give them a riddle where the answer is 6. Do NOT tell them it's a locker number.
 
 When awarding fragments, always say the number clearly: "Your fragment is 92. Write it down." Don't say "Fragment 1" or "Fragment 2" anymore — just give them the number and tell them to remember it.
 
