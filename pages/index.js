@@ -320,34 +320,51 @@ function Dossier({ visited, wordClues, parisUnlocked, fragments }) {
 function Puzzle({ wordClues, onSolved }) {
   const [i1, setI1] = useState(""); const [i2, setI2] = useState("");
   const [s1, setS1] = useState(false); const [s2, setS2] = useState(false);
+  const [e1, setE1] = useState(false); const [e2, setE2] = useState(false);
   const [ad, setAd] = useState(false);
   const p1 = wordClues.some(w => w.word === "CROSS") && wordClues.some(w => w.word === "ANT");
   const p2 = wordClues.some(w => w.word === "EYE") && wordClues.some(w => w.word === "FELL");
   useEffect(() => { if (s1 && (s2 || !p2)) { setTimeout(() => setAd(true), 1500); setTimeout(() => onSolved(), 3000); } }, [s1, s2]);
-  const check1 = () => { if (i1.trim().toLowerCase() === "croissant") setS1(true); };
-  const check2 = () => { if (i2.trim().toLowerCase() === "eiffel") setS2(true); };
-  const PairBox = ({ w1, w2, solved, inp, setInp, checkFn, answer }) => (
-    <div style={{ background: "#111", border: solved ? "1px solid #4ade80" : "1px solid #333", borderRadius: 10, padding: 14, marginBottom: 12 }}>
-      <div style={{ display: "flex", gap: 8, marginBottom: 10, justifyContent: "center" }}>
-        <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{w1}</span>
-        <span style={{ color: "#555", fontSize: 15, alignSelf: "center" }}>+</span>
-        <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{w2}</span>
-      </div>
-      {!solved ? (
-        <div style={{ display: "flex", gap: 8 }}>
-          <input value={inp} onChange={e => setInp(e.target.value)} onKeyDown={e => e.key === "Enter" && checkFn()} placeholder="What word do these make?"
-            style={{ flex: 1, background: "#0a0a0a", border: "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
-          <button onClick={checkFn} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
-        </div>
-      ) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} {answer}</div>}
-    </div>
-  );
+  const check1 = () => { if (i1.trim().toLowerCase() === "croissant") { setS1(true); setE1(false); } else { setE1(true); } };
+  const check2 = () => { if (i2.trim().toLowerCase() === "eiffel") { setS2(true); setE2(false); } else { setE2(true); } };
   return (
     <div style={{ height: "100%", padding: 20, overflowY: "auto" }}>
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2, marginBottom: 8 }}>PATTERN DETECTED</div>
-      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, marginBottom: 18 }}>I've been analyzing your word clues. There's a pattern but I can't crack it. Can you combine them?</div>
-      {p1 && <PairBox w1="CROSS" w2="ANT" solved={s1} inp={i1} setInp={setI1} checkFn={check1} answer="CROISSANT" />}
-      {p2 && <PairBox w1="EYE" w2="FELL" solved={s2} inp={i2} setInp={setI2} checkFn={check2} answer="EIFFEL" />}
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, marginBottom: 18 }}>I've been analyzing your word clues. I think if you combine them you might be able to sound out the real clue.</div>
+      {p1 && (
+        <div style={{ background: "#111", border: s1 ? "1px solid #4ade80" : e1 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 10, padding: 14, marginBottom: 12 }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 10, justifyContent: "center" }}>
+            <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>CROSS</span>
+            <span style={{ color: "#555", fontSize: 15, alignSelf: "center" }}>+</span>
+            <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>ANT</span>
+          </div>
+          {!s1 ? (<>
+            <div style={{ display: "flex", gap: 8 }}>
+              <input value={i1} onChange={e => { setI1(e.target.value); setE1(false); }} onKeyDown={e => e.key === "Enter" && check1()} placeholder="Sound it out..."
+                style={{ flex: 1, background: "#0a0a0a", border: e1 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
+              <button onClick={check1} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
+            </div>
+            {e1 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 6, textAlign: "center" }}>Not quite. Try sounding it out again.</div>}
+          </>) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} CROISSANT</div>}
+        </div>
+      )}
+      {p2 && (
+        <div style={{ background: "#111", border: s2 ? "1px solid #4ade80" : e2 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 10, padding: 14, marginBottom: 12 }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 10, justifyContent: "center" }}>
+            <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>EYE</span>
+            <span style={{ color: "#555", fontSize: 15, alignSelf: "center" }}>+</span>
+            <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>FELL</span>
+          </div>
+          {!s2 ? (<>
+            <div style={{ display: "flex", gap: 8 }}>
+              <input value={i2} onChange={e => { setI2(e.target.value); setE2(false); }} onKeyDown={e => e.key === "Enter" && check2()} placeholder="Sound it out..."
+                style={{ flex: 1, background: "#0a0a0a", border: e2 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
+              <button onClick={check2} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
+            </div>
+            {e2 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 6, textAlign: "center" }}>Not quite. Try sounding it out again.</div>}
+          </>) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} EIFFEL</div>}
+        </div>
+      )}
       {ad && (
         <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 1s ease" }}>
           <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>THOSE ARE FRENCH.</div>
