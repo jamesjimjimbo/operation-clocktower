@@ -228,25 +228,12 @@ function Dossier({ visited, wordClues, parisUnlocked, fragments }) {
         );
       })}
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
-      <div style={{ marginBottom: 18 }}>
-        <div style={{ color: "#555", fontFamily: "monospace", fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>DOOR CODE (London)</div>
-        <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
-          <span style={{ fontFamily: "monospace", fontSize: 11, color: "#888" }}>*</span>
-          {["92","02","45"].map((code, i) => (
-            <div key={i} style={{ width: 38, height: 34, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{fragments[i] || "??"}</span>
-            </div>
-          ))}
-          <span style={{ fontFamily: "monospace", fontSize: 11, color: "#888" }}>#</span>
-        </div>
-        <div style={{ color: "#555", fontFamily: "monospace", fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>LOCKER CODE (Paris)</div>
-        <div style={{ display: "flex", gap: 6 }}>
-          {["41","31","98"].map((code, i) => (
-            <div key={i} style={{ width: 38, height: 34, borderRadius: 6, background: fragments[i+3] ? "#111" : "#0a0a0a", border: fragments[i+3] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ color: fragments[i+3] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{fragments[i+3] || "??"}</span>
-            </div>
-          ))}
-        </div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
+        {[0,1,2].map(i => (
+          <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
+          </div>
+        ))}
       </div>
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>WORD CLUES</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 }}>
@@ -276,6 +263,14 @@ function Dossier({ visited, wordClues, parisUnlocked, fragments }) {
             <span style={{ marginLeft: "auto", color: "#333", fontFamily: "monospace", fontSize: 10 }}>PENDING</span>
           </div>
         ))}
+        <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
+        <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
+          {[3,4,5].map(i => (
+            <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
+            </div>
+          ))}
+        </div>
       </>}
     </div>
   );
