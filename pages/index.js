@@ -94,7 +94,7 @@ const STYLES = {
 };
 
 function TL({ text, style, onDone }) {
-  const [d, setD] = useState("");
+  const [d, setD] = useState(null);
   const i = useRef(0);
   useEffect(() => {
     if (style === "sp" || !text) { onDone?.(); return; }
@@ -104,6 +104,7 @@ function TL({ text, style, onDone }) {
     return () => clearInterval(iv);
   }, [text, style]);
   if (style === "sp") return <div style={{ height: 14 }} />;
+  if (d === null) return <div style={{ ...STYLES[style], fontFamily: "'Courier New', monospace", minHeight: 20 }} />;
   return <div style={{ ...STYLES[style], fontFamily: "'Courier New', monospace" }}>{d}<span style={{ opacity: d.length < (text||"").length ? 1 : 0, color: "#facc15" }}>{"\u2588"}</span></div>;
 }
 
@@ -137,7 +138,7 @@ function IS({ title, subtitle, prompt, placeholder, onSubmit, errMsg, buttonText
     <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <div style={{ color: "#e0e0e0", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 4, textAlign: "center" }}>{title}</div>
       {subtitle && <div style={{ color: "#888", fontFamily: "monospace", fontSize: 12, letterSpacing: 4, marginBottom: 32, textAlign: "center" }}>{subtitle}</div>}
-      {prompt && <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, marginBottom: 16, textAlign: "center", maxWidth: 300, lineHeight: 1.6, whiteSpace: "pre-line" }}>{prompt}</div>}
+      {prompt && <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, marginBottom: 16, textAlign: "center", maxWidth: 300, lineHeight: 1.6 }}>{prompt.split("\n").map((line, i) => <div key={i} style={{ marginBottom: i === 0 ? 8 : 0 }}>{line}</div>)}</div>}
       <input value={val} onChange={e => { setVal(e.target.value); setErr(false); }} onKeyDown={e => e.key === "Enter" && check()} placeholder={placeholder} autoFocus
         style={{ width: "100%", maxWidth: 280, background: "#111", border: err ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "11px 14px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 15, outline: "none", textAlign: "center", marginBottom: 12 }} />
       <button onClick={check} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "10px 28px", fontFamily: "monospace", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>{buttonText || "SUBMIT"}</button>
@@ -226,13 +227,26 @@ function Dossier({ visited, wordClues, parisUnlocked, fragments }) {
           </div>
         );
       })}
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>FRAGMENTS</div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-        {[0,1,2,3,4].map(i => (
-          <div key={i} style={{ width: 42, height: 42, borderRadius: 8, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 18, fontWeight: 700 }}>{fragments[i] || "?"}</span>
-          </div>
-        ))}
+      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
+      <div style={{ marginBottom: 18 }}>
+        <div style={{ color: "#555", fontFamily: "monospace", fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>DOOR CODE (London)</div>
+        <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+          <span style={{ fontFamily: "monospace", fontSize: 11, color: "#888" }}>*</span>
+          {["92","02","45"].map((code, i) => (
+            <div key={i} style={{ width: 38, height: 34, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{fragments[i] || "??"}</span>
+            </div>
+          ))}
+          <span style={{ fontFamily: "monospace", fontSize: 11, color: "#888" }}>#</span>
+        </div>
+        <div style={{ color: "#555", fontFamily: "monospace", fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>LOCKER CODE (Paris)</div>
+        <div style={{ display: "flex", gap: 6 }}>
+          {["41","31","98"].map((code, i) => (
+            <div key={i} style={{ width: 38, height: 34, borderRadius: 6, background: fragments[i+3] ? "#111" : "#0a0a0a", border: fragments[i+3] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: fragments[i+3] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{fragments[i+3] || "??"}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>WORD CLUES</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 }}>
@@ -326,11 +340,12 @@ function Chat({ codenames, visited, setVisited, wordClues, setWordClues, fragmen
 
   const detectFromResponse = (t) => {
     const l = t.toLowerCase();
-    if (l.includes("fragment") && l.includes("7")) setFragments(p => { const n=[...p]; n[0]="7"; return n; });
-    if (l.includes("fragment") && l.includes("number") && l.includes("3")) setFragments(p => { const n=[...p]; n[1]="3"; return n; });
-    if (l.includes("fragment") && l.includes("number") && l.includes("1")) setFragments(p => { const n=[...p]; n[2]="1"; return n; });
-    if (l.includes("fragment") && l.includes("number") && l.includes("9")) setFragments(p => { const n=[...p]; n[3]="9"; return n; });
-    if (l.includes("fragment") && l.includes("number") && l.includes("4")) setFragments(p => { const n=[...p]; n[4]="4"; return n; });
+    if (l.includes("fragment") && l.includes("92")) setFragments(p => { const n=[...p]; n[0]="92"; return n; });
+    if (l.includes("fragment") && l.includes("02")) setFragments(p => { const n=[...p]; n[1]="02"; return n; });
+    if ((l.includes("fragment") && l.includes("45")) || (l.includes("write") && l.includes("45"))) setFragments(p => { const n=[...p]; n[2]="45"; return n; });
+    if (l.includes("fragment") && l.includes("41")) setFragments(p => { const n=[...p]; n[3]="41"; return n; });
+    if (l.includes("fragment") && l.includes("31")) setFragments(p => { const n=[...p]; n[4]="31"; return n; });
+    if (l.includes("fragment") && l.includes("98")) setFragments(p => { const n=[...p]; n[5]="98"; return n; });
     if (l.includes("ant") && (l.includes("remember") || l.includes("word") || l.includes("strip"))) setWordClues(p => p.some(w => w.word === "ANT") ? p : [...p, WORD_MAP.friend]);
   };
 
@@ -424,7 +439,7 @@ export default function Home() {
   const [codenames] = useState(["JAGUAR", "OTTER", "STINGRAY"]);
   const [visited, setVisited] = usePersist("oct_vis", []);
   const [wordClues, setWordClues] = usePersist("oct_wc", []);
-  const [fragments, setFragments] = usePersist("oct_fr", ["","","","",""]);
+  const [fragments, setFragments] = usePersist("oct_fr", ["","","","","",""]);
   const [parisUnlocked, setParisUnlocked] = usePersist("oct_pu", false);
   const [view, setView] = useState("chat");
   const [msgs, setMsgs] = usePersist("oct_ms", []);
@@ -444,7 +459,22 @@ export default function Home() {
 
   if (phase === "passcode") return wrap(<IS resetKey="pass" title="OPERATION CLOCKTOWER" subtitle="SECURE CHANNEL" prompt="ENTER MISSION CODE" placeholder="Mission code..." buttonText="ACCESS" errMsg="Invalid mission code." onSubmit={v => { if (v.trim().toUpperCase() === MC) { setPhase("intro"); return true; } return false; }} />);
   if (phase === "intro") return wrap(<TS id="intro" lines={[{ t: "OPERATION CLOCKTOWER", s: "header" },{ t: "SECURE CHANNEL", s: "sub" },{ t: "", s: "sp" },{ t: "Incoming transmission...", s: "dim", delay: 800 },{ t: "", s: "sp" },{ t: "Hello, agents.", s: "normal", delay: 500 },{ t: "", s: "sp" },{ t: "My name is Tru.", s: "bold" },{ t: "", s: "sp" },{ t: "Some of you may know me from the City Spies.", s: "normal" },{ t: "", s: "sp" },{ t: "Now I need a new team.", s: "normal" },{ t: "", s: "sp" },{ t: "But first \u2014 I need to make sure you are who I think you are.", s: "bold" }]} onDone={() => setPhase("verify")} />);
-  if (phase === "verify") { const q = VQS[vStep]; return wrap(<IS resetKey={`v${vStep}`} title="OPERATION CLOCKTOWER" subtitle="IDENTITY CHECK" prompt={`${q.name.toUpperCase()}, ANSWER THIS:\n${q.q}`} placeholder="Type your answer..." buttonText="VERIFY" errMsg="Verification failed." onSubmit={v => { if (fuzzyMatch(v, q.a)) { if (vStep === 0) { setVStep(1); return true; } else { setPhase("briefing"); return true; } } return false; }} />); }
+  if (phase === "verify") { const q = VQS[vStep]; return wrap(<IS resetKey={`v${vStep}`} title="OPERATION CLOCKTOWER" subtitle="IDENTITY CHECK" prompt={`${q.name.toUpperCase()}, ANSWER THIS:\n${q.q}`} placeholder="Type your answer..." buttonText="VERIFY" errMsg="Verification failed." onSubmit={v => { if (fuzzyMatch(v, q.a)) { if (vStep === 0) { setPhase("verify_success_cade"); } else { setPhase("verify_success_maggie"); } return true; } return false; }} />); }
+  if (phase === "verify_success_cade") return wrap(
+    <div onClick={() => { setVStep(1); setPhase("verify"); }} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>{"\u2713"} VERIFIED</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, lineHeight: 1.6, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Cade. Enjoy Mark Day next year.</div>
+      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>
+    </div>
+  );
+  if (phase === "verify_success_maggie") return wrap(
+    <div onClick={() => setPhase("briefing")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>{"\u2713"} VERIFIED</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, lineHeight: 1.6, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Maggie. Keep working hard with Trish.</div>
+      <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 16 }}>Both agents confirmed.</div>
+      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>
+    </div>
+  );
   if (phase === "briefing") {
     if (briefIdx >= BRIEFING.length) { setPhase("arrived"); return null; }
     const b = BRIEFING[briefIdx];
@@ -463,7 +493,15 @@ export default function Home() {
       <button onClick={() => setPhase("calverify")} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "12px 32px", fontFamily: "monospace", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>VERIFY CALLUM</button>
     </div>
   );
-  if (phase === "calverify") return wrap(<IS resetKey="cal" title="AGENT VERIFICATION" subtitle="ONE MORE AGENT TO CONFIRM" prompt="CALLUM, ANSWER THIS:\nWho did you fly to London with?" placeholder="Type your answer..." buttonText="VERIFY" errMsg="That's not right. Try again, agent." onSubmit={v => { if (calMatch(v)) { setPhase("codenames"); return true; } return false; }} />);
+  if (phase === "calverify") return wrap(<IS resetKey="cal" title="AGENT VERIFICATION" subtitle="ONE MORE AGENT TO CONFIRM" prompt={"CALLUM, ANSWER THIS:\nWho did you fly to London with?"} placeholder="Type your answer..." buttonText="VERIFY" errMsg="That's not right. Try again, agent." onSubmit={v => { if (calMatch(v)) { setPhase("calverify_success"); return true; } return false; }} />);
+  if (phase === "calverify_success") return wrap(
+    <div onClick={() => setPhase("codenames")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>{"\u2713"} ALL AGENTS VERIFIED</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, lineHeight: 1.6, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Callum. Good job beating Areeb in cards.</div>
+      <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 16 }}>The team is complete.</div>
+      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>
+    </div>
+  );
   if (phase === "codenames") return wrap(<CodenameReveal onDone={() => setPhase("active")} />);
   if (phase === "puzzle") return wrap(<Puzzle wordClues={wordClues} onSolved={() => { setParisUnlocked(true); setPhase("active"); setView("dossier"); }} />);
 
