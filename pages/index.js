@@ -36,6 +36,16 @@ function usePersist(key, initial) {
       window.location.href = window.location.pathname;
       return;
     }
+    if (params.get("puzzle") === "1") {
+      localStorage.setItem("oct_phase", JSON.stringify("active"));
+      localStorage.setItem("oct_vis", JSON.stringify(["bigben","tower","stpauls","buckingham","eye"]));
+      localStorage.setItem("oct_wc", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
+      localStorage.setItem("oct_fr", JSON.stringify(["92","02","45","","",""]));
+      localStorage.setItem("oct_pu", JSON.stringify(false));
+      localStorage.setItem("oct_ms", JSON.stringify([{role:"spy",text:"Agents \u2014 I've been analyzing your word clues. Check the puzzle tab. I think there's a pattern.\n\n\u2014 Tru"}]));
+      window.location.href = window.location.pathname;
+      return;
+    }
     if (params.get("reset") === "1") {
       localStorage.clear();
       window.location.href = window.location.pathname;
