@@ -13,6 +13,26 @@ function calMatch(input) { return input.trim().toLowerCase().includes("areeb"); 
 function usePersist(key, initial) {
   const [val, setVal] = useState(initial);
   const loaded = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("paris") === "1") {
+      setPhase("active");
+      setVisited(["bigben","tower","stpauls","buckingham","eye"]);
+      setWordClues([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]);
+      setFragments(["92","02","45","","",""]);
+      setParisUnlocked(true);
+      setView("chat");
+      setMsgs([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nWelcome to Paris, agents. The Collector is here. The final fragments are hidden in the city.\n\nTell me where you are.\n\n\u2014 Tru"}]);
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+    if (params.get("reset") === "1") {
+      localStorage.clear();
+      window.history.replaceState({}, "", window.location.pathname);
+      window.location.reload();
+    }
+  }, []);
+
   useEffect(() => { try { const s = window.localStorage.getItem(key); if (s) setVal(JSON.parse(s)); } catch(e){} loaded.current = true; }, []);
   useEffect(() => { if (!loaded.current) return; try { window.localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }, [val]);
   return [val, setVal];
@@ -48,7 +68,7 @@ const BRIEFING = [
     { t: "An operative known only as", s: "normal" }, { t: "THE COLLECTOR", s: "villain" }, { t: "is hunting for the fragments.", s: "normal" }, { t: "", s: "sp" },
     { t: "We don't know who he is.", s: "normal" }, { t: "We don't know how close he is.", s: "normal" }, { t: "", s: "sp" },
     { t: "But we know where he's heading.", s: "bold" },
-  ]},
+  ], collectorImg: true },
   { id: "london", special: "london" },
   { id: "b3", lines: [
     { t: "YOUR TEAM", s: "header" }, { t: "", s: "sp" },
@@ -108,7 +128,7 @@ function TL({ text, style, onDone }) {
   return <div style={{ ...STYLES[style], fontFamily: "'Courier New', monospace" }}>{d}<span style={{ opacity: d.length < (text||"").length ? 1 : 0, color: "#facc15" }}>{"\u2588"}</span></div>;
 }
 
-function TS({ lines, onDone, id }) {
+function TS({ lines, onDone, id, extraContent }) {
   const [vis, setVis] = useState(0);
   const [done, setDone] = useState(false);
   const ref = useRef(null);
@@ -123,6 +143,7 @@ function TS({ lines, onDone, id }) {
     <div onClick={() => done && onDone?.()} style={{ height: "100%", display: "flex", flexDirection: "column", cursor: done ? "pointer" : "default", userSelect: "none" }}>
       <div ref={ref} style={{ flex: 1, overflowY: "auto", padding: "20px 16px", display: "flex", flexDirection: "column", gap: 2 }}>
         {lines.slice(0, vis).map((l, i) => <TL key={`${id}-${i}`} text={l.t} style={l.s} onDone={() => hd(i)} />)}
+        {done && extraContent}
       </div>
       {done && <div style={{ padding: "14px 16px 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>}
     </div>
@@ -283,7 +304,9 @@ function Puzzle({ wordClues, onSolved }) {
   const p1 = wordClues.some(w => w.word === "CROSS") && wordClues.some(w => w.word === "ANT");
   const p2 = wordClues.some(w => w.word === "EYE") && wordClues.some(w => w.word === "FELL");
   useEffect(() => { if (s1 && (s2 || !p2)) { setTimeout(() => setAd(true), 1500); setTimeout(() => onSolved(), 3000); } }, [s1, s2]);
-  const PairBox = ({ w1, w2, solved, inp, setInp, answer, setSolved }) => (
+  const check1 = () => { if (i1.trim().toLowerCase() === "croissant") setS1(true); };
+  const check2 = () => { if (i2.trim().toLowerCase() === "eiffel") setS2(true); };
+  const PairBox = ({ w1, w2, solved, inp, setInp, checkFn, answer }) => (
     <div style={{ background: "#111", border: solved ? "1px solid #4ade80" : "1px solid #333", borderRadius: 10, padding: 14, marginBottom: 12 }}>
       <div style={{ display: "flex", gap: 8, marginBottom: 10, justifyContent: "center" }}>
         <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>{w1}</span>
@@ -292,19 +315,19 @@ function Puzzle({ wordClues, onSolved }) {
       </div>
       {!solved ? (
         <div style={{ display: "flex", gap: 8 }}>
-          <input value={inp} onChange={e => setInp(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && inp.trim().toLowerCase() === answer) setSolved(true); }} placeholder="What word?"
+          <input value={inp} onChange={e => setInp(e.target.value)} onKeyDown={e => e.key === "Enter" && checkFn()} placeholder="What word do these make?"
             style={{ flex: 1, background: "#0a0a0a", border: "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
-          <button onClick={() => inp.trim().toLowerCase() === answer && setSolved(true)} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>SOLVE</button>
+          <button onClick={checkFn} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
         </div>
-      ) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} {answer.toUpperCase()}</div>}
+      ) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} {answer}</div>}
     </div>
   );
   return (
     <div style={{ height: "100%", padding: 20, overflowY: "auto" }}>
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2, marginBottom: 8 }}>PATTERN DETECTED</div>
       <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, marginBottom: 18 }}>I've been analyzing your word clues. There's a pattern but I can't crack it. Can you combine them?</div>
-      {p1 && <PairBox w1="CROSS" w2="ANT" solved={s1} inp={i1} setInp={setI1} answer="croissant" setSolved={setS1} />}
-      {p2 && <PairBox w1="EYE" w2="FELL" solved={s2} inp={i2} setInp={setI2} answer="eiffel" setSolved={setS2} />}
+      {p1 && <PairBox w1="CROSS" w2="ANT" solved={s1} inp={i1} setInp={setI1} checkFn={check1} answer="CROISSANT" />}
+      {p2 && <PairBox w1="EYE" w2="FELL" solved={s2} inp={i2} setInp={setI2} checkFn={check2} answer="EIFFEL" />}
       {ad && (
         <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 1s ease" }}>
           <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>THOSE ARE FRENCH.</div>
@@ -475,6 +498,15 @@ export default function Home() {
     const b = BRIEFING[briefIdx];
     if (b.special === "london") return wrap(<LondonReveal onDone={() => setBriefIdx(i => i + 1)} />);
     if (b.special === "howto") return wrap(<HowtoLocs onDone={() => setBriefIdx(i => i + 1)} />);
+    if (b.collectorImg) {
+      return wrap(
+        <TS id={b.id} lines={b.lines} onDone={() => setBriefIdx(i => i + 1)} extraContent={
+          <div style={{ display: "flex", justifyContent: "center", margin: "10px 0" }}>
+            <img src={`${IMG}/Collector.png`} alt="" style={{ width: 80, height: 80, borderRadius: 12, border: "1px solid #333" }} />
+          </div>
+        } />
+      );
+    }
     return wrap(<TS id={b.id} lines={b.lines} onDone={() => setBriefIdx(i => i + 1)} />);
   }
   if (phase === "arrived") return wrap(
