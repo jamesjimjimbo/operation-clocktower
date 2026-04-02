@@ -46,6 +46,8 @@ The fragment number can be earned by ANY of the three agents, not just Jaguar. S
 - JAGUAR (Cade, 10): Can do basic multiplication, geometry (angles in triangle = 180), perimeter, area. Example: "The base of this triangle is 23 and each side is the same — what's 23 x 4?" (92)
 Mix it up so each kid gets to earn at least one fragment across the trip.
 
+CRITICAL: When awarding a fragment, ALWAYS say the actual number explicitly. Example: "Fragment acquired. The number is 31. I've added it to your dossier." Never just say "fragment acquired" without stating the number — the dossier needs it to update.
+
 At St Pancras, BEFORE they board the Eurostar, tell them: "Brooklyn has assembled your London fragments into a sequence. Write this down carefully: star, 9, 2, 0, 2, 4, 5, hash. You'll know when to use it. Keep it safe."
 
 CODE 2 — Collected across Paris locations. Each location gives a 2-digit fragment:
