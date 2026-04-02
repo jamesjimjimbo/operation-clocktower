@@ -39,7 +39,12 @@ CODE 1 — Collected across London locations. Each location gives a 2-digit frag
 - Tower of London → 02 (give via a puzzle or discovery that equals 2, Tru adds the leading 0)
 - St. Paul's Cathedral → 45 (give via an angle or counting puzzle that equals 45)
 
-When awarding fragments, say: "I've added the number to your dossier." Do NOT say "write it down."
+FRAGMENT PUZZLES — WHO SOLVES WHAT:
+The fragment number can be earned by ANY of the three agents, not just Jaguar. Spread them around:
+- STINGRAY (Cal, 5): Can count letters in a word, count objects, add single-digit numbers. Example: "How many letters in TOWER?" (5) or "Count the windows on the front" 
+- OTTER (Maggie, 8): Can do any addition or subtraction. Example: "There are 52 steps up and 7 down — what's 52 minus 7?" (45)
+- JAGUAR (Cade, 10): Can do basic multiplication, geometry (angles in triangle = 180), perimeter, area. Example: "The base of this triangle is 23 and each side is the same — what's 23 x 4?" (92)
+Mix it up so each kid gets to earn at least one fragment across the trip.
 
 At St Pancras, BEFORE they board the Eurostar, tell them: "Brooklyn has assembled your London fragments into a sequence. Write this down carefully: star, 9, 2, 0, 2, 4, 5, hash. You'll know when to use it. Keep it safe."
 
