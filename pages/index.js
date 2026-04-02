@@ -451,6 +451,60 @@ function Chat({ codenames, visited, setVisited, wordClues, setWordClues, fragmen
   );
 }
 
+/* ============ PASSCODE WITH HIDDEN DEBUG ============ */
+function PasscodeWithDebug({ setPhase, setVisited, setWordClues, setFragments, setParisUnlocked, setMsgs, setBriefIdx }) {
+  const [val, setVal] = useState("");
+  const [err, setErr] = useState(false);
+  const [taps, setTaps] = useState(0);
+  const [showDebug, setShowDebug] = useState(false);
+  const go = () => { if (val.trim().toUpperCase() === MC) { setPhase("intro"); } else setErr(true); };
+  const handleTap = () => { const n = taps + 1; setTaps(n); if (n >= 3) setShowDebug(true); };
+
+  const jumpTo = (mode) => {
+    setBriefIdx(99);
+    if (mode === "london") {
+      setVisited([]); setWordClues([]); setFragments(["","","","","",""]); setParisUnlocked(false);
+      setMsgs([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nYou're officially active.\n\nAct like tourists \u2014 check out the sites, eat good food. But at landmarks, check in with me.\n\nTell me where you are.\n\n\u2014 Tru"}]);
+    } else if (mode === "puzzle") {
+      setVisited(["bigben","tower","stpauls","buckingham","eye"]);
+      setWordClues([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]);
+      setFragments(["92","02","45","","",""]); setParisUnlocked(false);
+      setMsgs([{role:"spy",text:"Agents \u2014 I've been analyzing your word clues. Check the puzzle tab.\n\n\u2014 Tru"}]);
+    } else if (mode === "paris") {
+      setVisited(["bigben","tower","stpauls","buckingham","eye"]);
+      setWordClues([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]);
+      setFragments(["92","02","45","","",""]); setParisUnlocked(true);
+      setMsgs([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nWelcome to Paris. The Collector is here. Tell me where you are.\n\n\u2014 Tru"}]);
+    }
+    setPhase("active");
+  };
+
+  const resetAll = () => { localStorage.clear(); window.location.reload(); };
+
+  const dbtn = { background: "#333", color: "#aaa", border: "1px solid #555", borderRadius: 8, padding: "8px 16px", fontFamily: "monospace", fontWeight: 700, fontSize: 11, cursor: "pointer", margin: 3 };
+
+  return (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={handleTap} style={{ color: "#e0e0e0", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 4, textAlign: "center", cursor: "default", userSelect: "none" }}>OPERATION CLOCKTOWER</div>
+      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 12, letterSpacing: 4, marginBottom: 32, textAlign: "center" }}>SECURE CHANNEL</div>
+      <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, marginBottom: 16 }}>ENTER MISSION CODE</div>
+      <input value={val} onChange={e => { setVal(e.target.value); setErr(false); }} onKeyDown={e => e.key === "Enter" && go()} placeholder="Mission code..." autoFocus
+        style={{ width: "100%", maxWidth: 280, background: "#111", border: err ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "11px 14px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 15, outline: "none", textAlign: "center", marginBottom: 12 }} />
+      <button onClick={go} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "10px 28px", fontFamily: "monospace", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>ACCESS</button>
+      {err && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 10 }}>Invalid mission code.</div>}
+      {showDebug && (
+        <div style={{ marginTop: 30, padding: 16, background: "#111", borderRadius: 10, border: "1px solid #333" }}>
+          <div style={{ color: "#888", fontFamily: "monospace", fontSize: 10, letterSpacing: 2, marginBottom: 8 }}>DEBUG MENU</div>
+          <button style={dbtn} onClick={resetAll}>RESET</button>
+          <button style={dbtn} onClick={() => jumpTo("london")}>LONDON</button>
+          <button style={dbtn} onClick={() => jumpTo("puzzle")}>PUZZLE</button>
+          <button style={dbtn} onClick={() => jumpTo("paris")}>PARIS</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ============ MAIN APP ============ */
 export default function Home() {
   const [phase, setPhase] = usePersist("oct_p", "passcode");
@@ -464,16 +518,11 @@ export default function Home() {
   const [msgs, setMsgs] = usePersist("oct_m", []);
   const codenames = ["JAGUAR", "OTTER", "STINGRAY"];
 
-  // Shortcuts
+  // Shortcuts via hidden debug menu (no URL params)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const p = new URLSearchParams(window.location.search);
-    const shortcuts = { reset: () => { localStorage.clear(); },
-      london: () => { localStorage.setItem("oct_p",'"active"'); localStorage.setItem("oct_v","[]"); localStorage.setItem("oct_w","[]"); localStorage.setItem("oct_f",'["","","","","",""]'); localStorage.setItem("oct_pu","false"); localStorage.setItem("oct_m",JSON.stringify([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nYou're officially active.\n\nAct like tourists. Check in at landmarks.\n\n\u2014 Tru"}])); localStorage.setItem("oct_bi","99"); },
-      puzzle: () => { localStorage.setItem("oct_p",'"active"'); localStorage.setItem("oct_v",JSON.stringify(["bigben","tower","stpauls","buckingham","eye"])); localStorage.setItem("oct_w",JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}])); localStorage.setItem("oct_f",JSON.stringify(["92","02","45","","",""])); localStorage.setItem("oct_pu","false"); localStorage.setItem("oct_m",JSON.stringify([{role:"spy",text:"Agents \u2014 check the puzzle tab. I see a pattern in your word clues.\n\n\u2014 Tru"}])); localStorage.setItem("oct_bi","99"); },
-      paris: () => { localStorage.setItem("oct_p",'"active"'); localStorage.setItem("oct_v",JSON.stringify(["bigben","tower","stpauls","buckingham","eye"])); localStorage.setItem("oct_w",JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}])); localStorage.setItem("oct_f",JSON.stringify(["92","02","45","","",""])); localStorage.setItem("oct_pu","true"); localStorage.setItem("oct_m",JSON.stringify([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nWelcome to Paris. The Collector is here. Tell me where you are.\n\n\u2014 Tru"}])); localStorage.setItem("oct_bi","99"); },
-    };
-    for (const k of Object.keys(shortcuts)) { if (p.get(k) === "1") { shortcuts[k](); window.location.href = window.location.pathname; return; } }
+    if (p.get("reset") === "1") { localStorage.clear(); window.location.href = window.location.pathname; }
   }, []);
 
   // Init welcome message
@@ -490,7 +539,7 @@ export default function Home() {
   const wrap = c => <>{head}<div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>{c}</div></>;
 
   /* --- PHASES --- */
-  if (phase === "passcode") return wrap(<IS rk="pass" title="OPERATION CLOCKTOWER" subtitle="SECURE CHANNEL" prompt="ENTER MISSION CODE" placeholder="Mission code..." buttonText="ACCESS" errMsg="Invalid mission code." onSubmit={v => { if (v.trim().toUpperCase() === MC) { setPhase("intro"); return true; } return false; }} />);
+  if (phase === "passcode") return wrap(<PasscodeWithDebug setPhase={setPhase} setVisited={setVisited} setWordClues={setWordClues} setFragments={setFragments} setParisUnlocked={setParisUnlocked} setMsgs={setMsgs} setBriefIdx={setBriefIdx} />);
 
   if (phase === "intro") return wrap(<TS id="intro" lines={[{t:"OPERATION CLOCKTOWER",s:"header"},{t:"SECURE CHANNEL",s:"sub"},{t:"",s:"sp"},{t:"Incoming transmission...",s:"dim",delay:800},{t:"",s:"sp"},{t:"Hello, agents.",s:"normal",delay:500},{t:"",s:"sp"},{t:"My name is Tru.",s:"bold"},{t:"",s:"sp"},{t:"Some of you may know me from the City Spies.",s:"normal"},{t:"",s:"sp"},{t:"Now I need a new team.",s:"normal"},{t:"",s:"sp"},{t:"But first \u2014 I need to make sure you are who I think you are.",s:"bold"}]} onDone={() => setPhase("verify")} />);
 
