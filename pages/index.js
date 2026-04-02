@@ -247,12 +247,33 @@ function AgentCards() {
   );
 }
 
+/* ============ PROGRESS TRACKERS ============ */
+function ProgressBar({ label, current, total, color }) {
+  return (
+    <div style={{ flex: 1 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+        <span style={{ color: "#888", fontFamily: "monospace", fontSize: 9, letterSpacing: 1 }}>{label}</span>
+        <span style={{ color, fontFamily: "monospace", fontSize: 9, fontWeight: 700 }}>{current}/{total}</span>
+      </div>
+      <div style={{ height: 4, background: "#222", borderRadius: 2 }}>
+        <div style={{ height: "100%", background: color, borderRadius: 2, width: `${(current/total)*100}%`, transition: "width 0.5s ease" }} />
+      </div>
+    </div>
+  );
+}
+
 /* ============ LONDON DOSSIER ============ */
 function LondonDossier({ visited, wordClues, fragments }) {
+  const fragCount = fragments.slice(0,3).filter(f => f).length;
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>LOCATIONS</div>
+      <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
+        <ProgressBar label="LOCATIONS" current={visited.length} total={5} color="#4ade80" />
+        <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
+        <ProgressBar label="WORD CLUES" current={wordClues.length} total={4} color="#facc15" />
+      </div>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>LOCATIONS</div>
       {LOCS.map(loc => {
         const v = visited.includes(loc.id);
         return (
@@ -263,15 +284,15 @@ function LondonDossier({ visited, wordClues, fragments }) {
           </div>
         );
       })}
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
+      <div style={{ color: "#3b82f6", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
       <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
         {[0,1,2].map(i => (
-          <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
+          <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #3b82f6" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: fragments[i] ? "#3b82f6" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
           </div>
         ))}
       </div>
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>WORD CLUES</div>
+      <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>WORD CLUES</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {wordClues.map((w, i) => (
           <div key={i} style={{ background: "#111", border: "1px solid #facc15", borderRadius: 8, padding: "6px 12px" }}>
@@ -287,12 +308,16 @@ function LondonDossier({ visited, wordClues, fragments }) {
 
 /* ============ PARIS DOSSIER ============ */
 function ParisDossier({ fragments }) {
+  const fragCount = fragments.slice(3,6).filter(f => f).length;
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
-      <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: 2, marginBottom: 6, textAlign: "center" }}>PARIS</div>
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, lineHeight: 1.6, textAlign: "center", marginBottom: 14 }}>The last fragments are in Paris.</div>
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>LOCATIONS</div>
+      <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: 2, marginBottom: 10, textAlign: "center" }}>PARIS</div>
+      <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
+        <ProgressBar label="LOCATIONS" current={0} total={4} color="#4ade80" />
+        <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
+      </div>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>LOCATIONS</div>
       {["The Louvre", "Sainte-Chapelle", "Sacr\u00e9-C\u0153ur", "Eiffel Tower"].map(l => (
         <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid #1a1a1a" }}>
           <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#333" }} />
@@ -300,11 +325,11 @@ function ParisDossier({ fragments }) {
           <span style={{ marginLeft: "auto", color: "#333", fontFamily: "monospace", fontSize: 10 }}>PENDING</span>
         </div>
       ))}
-      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
+      <div style={{ color: "#3b82f6", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
       <div style={{ display: "flex", gap: 6 }}>
         {[3,4,5].map(i => (
-          <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #4ade80" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: fragments[i] ? "#4ade80" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
+          <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #3b82f6" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: fragments[i] ? "#3b82f6" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
           </div>
         ))}
       </div>
@@ -391,13 +416,15 @@ function Chat({ codenames, visited, setVisited, wordClues, setWordClues, fragmen
 
   const detectResp = (t) => {
     const l = t.toLowerCase();
-    if (l.includes("fragment") && l.includes("92")) setFragments(p => { const n=[...p]; n[0]="92"; return n; });
-    if (l.includes("fragment") && l.includes("02")) setFragments(p => { const n=[...p]; n[1]="02"; return n; });
-    if ((l.includes("fragment") || l.includes("dossier")) && l.includes("45")) setFragments(p => { const n=[...p]; n[2]="45"; return n; });
-    if ((l.includes("fragment") || l.includes("dossier")) && l.includes("41")) setFragments(p => { const n=[...p]; n[3]="41"; return n; });
-    if ((l.includes("fragment") || l.includes("dossier")) && l.includes("31")) setFragments(p => { const n=[...p]; n[4]="31"; return n; });
-    if ((l.includes("fragment") || l.includes("dossier")) && l.includes("98")) setFragments(p => { const n=[...p]; n[5]="98"; return n; });
-    if (l.includes("ant") && (l.includes("remember") || l.includes("word") || l.includes("strip") || l.includes("clue") || l.includes("dossier"))) setWordClues(p => p.some(w => w.word === "ANT") ? p : [...p, WORD_MAP.friend]);
+    // Check for specific fragment numbers anywhere in response
+    if (l.includes("92") && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) setFragments(p => { const n=[...p]; n[0]="92"; return n; });
+    if (l.includes("02") && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) setFragments(p => { const n=[...p]; n[1]="02"; return n; });
+    if (l.includes("45") && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) setFragments(p => { const n=[...p]; n[2]="45"; return n; });
+    if (l.includes("41") && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) setFragments(p => { const n=[...p]; n[3]="41"; return n; });
+    if (l.includes("31") && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) setFragments(p => { const n=[...p]; n[4]="31"; return n; });
+    if (l.includes("98") && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) setFragments(p => { const n=[...p]; n[5]="98"; return n; });
+    // Word clue: ANT
+    if ((l.includes("ant") || l.includes("aunt")) && (l.includes("remember") || l.includes("word") || l.includes("strip") || l.includes("clue") || l.includes("dossier"))) setWordClues(p => p.some(w => w.word === "ANT") ? p : [...p, WORD_MAP.friend]);
   };
 
   const handlePhoto = (e) => {
