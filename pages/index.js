@@ -35,12 +35,16 @@ const WORD_MAP = {
 const BRIEFING = [
   { id: "b1", lines: [
     { t: "⚠ PRIORITY BRIEFING ⚠", s: "warning" },{ t: "OPERATION CLOCKTOWER", s: "header" },{ t: "", s: "sp" },
-    { t: "Over 100 years ago, a brilliant clockmaker named Émile Bellecourt built secret mechanisms into the great landmarks of London.", s: "normal" },{ t: "", s: "sp" },
-    { t: "Hidden inside each is a fragment of a master code — a code that unlocks a vault containing his greatest invention.", s: "normal" },{ t: "", s: "sp" },
-    { t: "For a century, no one knew.", s: "normal" },{ t: "", s: "sp" },{ t: "Now someone does.", s: "bold" },
+    { t: "Over 100 years ago, a brilliant clockmaker named Émile Bellecourt built secret mechanisms into the great landmarks of the world.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Hidden inside each is a fragment of a master code — a code that would guide someone to his secret treasure.", s: "normal" },{ t: "", s: "sp" },
+    { t: "For a century, no one knew.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Now someone does.", s: "bold" },
+  ]},
+  { id: "b1b", lines: [
+    { t: "We've received a tip about where to find some of the fragments.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Our usual team is busy on another mission, so we need you to get on a plane and head to...", s: "normal" },
   ]},
   { id: "london", special: "london" },
-  { id: "b2", special: "collector" },
   { id: "b3", lines: [
     { t: "YOUR TEAM", s: "header" },{ t: "", s: "sp" },
     { t: "Your father — codename MOTHER — and your brother Callum are already en route to London.", s: "normal" },{ t: "", s: "sp" },
@@ -56,6 +60,11 @@ const BRIEFING = [
     { t: "Mother and Monty are your handlers.", s: "dim" },{ t: "The missions are yours.", s: "bold" },
   ]},
   { id: "howto", special: "howto" },
+  { id: "b2", special: "collector" },
+  { id: "b2b", lines: [
+    { t: "Oh no — the Collector, one of Umbra's best operatives, must have intercepted the same clue.", s: "normal" },{ t: "", s: "sp" },
+    { t: "You have to get to London quickly to beat him!", s: "bold" },
+  ]},
   { id: "b6", lines: [
     { t: "WHAT TO DO NOW", s: "header" },{ t: "", s: "sp" },
     { t: "1. Get to London.", s: "normal" },{ t: "2. When your whole team is together, come back to this site.", s: "normal" },{ t: "3. I'll verify Callum and start the mission.", s: "normal" },{ t: "", s: "sp" },
@@ -166,7 +175,7 @@ function IS({ title, subtitle, prompt, placeholder, onSubmit, errMsg, buttonText
   );
 }
 
-/* ============ COLLECTOR REVEAL (dramatic, after London) ============ */
+/* ============ COLLECTOR REVEAL (dramatic) ============ */
 function CollectorReveal({ onDone }) {
   const [phase, setPhase] = useState(0);
   useEffect(() => {
@@ -181,7 +190,6 @@ function CollectorReveal({ onDone }) {
   }, []);
   return (
     <div onClick={() => phase >= 5 && onDone()} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: phase >= 5 ? "pointer" : "default", userSelect: "none", position: "relative", overflow: "hidden" }}>
-      {/* Glitch overlay */}
       {(phase >= 1 && phase < 3) && (
         <div style={{ position: "absolute", inset: 0, background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(239,68,68,0.03) 2px, rgba(239,68,68,0.03) 4px)", animation: "fadeIn 0.3s ease", zIndex: 2 }} />
       )}
@@ -219,6 +227,51 @@ function CollectorReveal({ onDone }) {
   );
 }
 
+/* ============ COLLECTOR TAUNT (after puzzle solved) ============ */
+function CollectorTaunt({ onDone }) {
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setPhase(1), 400),
+      setTimeout(() => setPhase(2), 1500),
+      setTimeout(() => setPhase(3), 4000),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, []);
+  return (
+    <div onClick={() => phase >= 3 && onDone()} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: phase >= 3 ? "pointer" : "default", userSelect: "none", position: "relative", overflow: "hidden" }}>
+      {phase >= 1 && (
+        <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, letterSpacing: 4, marginBottom: 16, animation: "pulse 0.5s infinite", zIndex: 3 }}>
+          ⚠ SIGNAL INTERCEPTED ⚠
+        </div>
+      )}
+      {phase >= 1 && (
+        <div style={{ animation: "fadeIn 0.8s ease", zIndex: 3 }}>
+          <img src={`${IMG}/Collector.png`} alt="" style={{ width: 80, height: 80, borderRadius: 14, border: "2px solid #ef4444", boxShadow: "0 0 20px rgba(239,68,68,0.3)" }} />
+        </div>
+      )}
+      {phase >= 2 && (
+        <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}>
+          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic" }}>
+            "Oh, you finally solved the London clues? I'm already a step ahead of you, eating all the chocolate croissants so you don't get any."
+          </div>
+          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic", marginTop: 10 }}>
+            "(Oh, and solving the puzzles too.)"
+          </div>
+          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic", marginTop: 10 }}>
+            "You'll never beat me to the treasure..."
+          </div>
+        </div>
+      )}
+      {phase >= 3 && (
+        <div style={{ marginTop: 24, zIndex: 3 }}>
+          <span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ============ LONDON REVEAL ============ */
 function LondonReveal({ onDone }) {
   const [s, setS] = useState(false);
@@ -228,7 +281,6 @@ function LondonReveal({ onDone }) {
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}><img src={`${IMG}/london.jpg`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }} /></div>
       {s && <>
         <div style={{ position: "relative", zIndex: 1, color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 10, textShadow: "0 0 40px rgba(250,204,21,0.4)", animation: "fadeIn 1s ease" }}>LONDON</div>
-        <div style={{ position: "relative", zIndex: 1, color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, marginTop: 12, textAlign: "center", maxWidth: 280, lineHeight: 1.6 }}>You're going to London to find the fragments.</div>
         <div style={{ position: "relative", zIndex: 1, marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
       </>}
     </div>
@@ -256,7 +308,7 @@ function ParisLocsPreview({ onDone }) {
   const [rev, setRev] = useState(0);
   const [ad, setAd] = useState(false);
   const lines = [
-    { t: "BELLECOURT WAS HERE TOO", s: "header" },{ t: "", s: "sp" },
+    { t: "YOU MUST GO TO PARIS NOW!", s: "header" },{ t: "", s: "sp" },
     { t: "Take the Eurostar to Paris. Same rules — act like tourists, check in at landmarks.", s: "normal" },{ t: "", s: "sp" },
     { t: "The Collector is already on his way. You need to beat him there.", s: "normal" },{ t: "", s: "sp" },
     { t: "Here are some places to investigate:", s: "bold" },
@@ -352,7 +404,7 @@ function CodenameReveal({ onDone }) {
   );
 }
 
-/* ============ AGENT CARDS (dossier header) ============ */
+/* ============ AGENT CARDS ============ */
 function AgentCards() {
   return (
     <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
@@ -399,23 +451,27 @@ function ChatBanner({ type, value }) {
 }
 
 /* ============ SPY MAP ============ */
-function SpyMap({ locations, visited, city }) {
+function SpyMap({ visited, city }) {
+  // London: based on satellite map — Big Ben southwest, Tower of London far east, St Paul's mid-east, Buckingham Palace south-west, London Eye near Big Ben south of river
   const LONDON_POINTS = [
-    { id: "bigben", label: "Big Ben", x: 38, y: 62 },
-    { id: "tower", label: "Tower of London", x: 72, y: 55 },
-    { id: "stpauls", label: "St. Paul's", x: 58, y: 48 },
-    { id: "buckingham", label: "Buckingham Palace", x: 30, y: 68 },
-    { id: "eye", label: "London Eye", x: 40, y: 58 },
+    { id: "bigben", label: "Big Ben", x: 35, y: 65 },
+    { id: "eye", label: "London Eye", x: 38, y: 60 },
+    { id: "buckingham", label: "Buckingham Palace", x: 28, y: 58 },
+    { id: "stpauls", label: "St. Paul's", x: 55, y: 50 },
+    { id: "tower", label: "Tower of London", x: 72, y: 52 },
   ];
+  // Paris: Eiffel Tower west, Arc de Triomphe northwest, Louvre center-east, Sainte-Chapelle center on Île de la Cité
   const PARIS_POINTS = [
-    { id: "louvre", label: "The Louvre", x: 52, y: 50 },
-    { id: "chapelle", label: "Sainte-Chapelle", x: 47, y: 55 },
-    { id: "sacrecoeur", label: "Sacré-Cœur", x: 53, y: 22 },
-    { id: "eiffel", label: "Eiffel Tower", x: 28, y: 52 },
+    { id: "eiffel", label: "Eiffel Tower", x: 25, y: 52 },
+    { id: "arcdetriomphe", label: "Arc de Triomphe", x: 22, y: 35 },
+    { id: "louvre", label: "The Louvre", x: 52, y: 42 },
+    { id: "chapelle", label: "Sainte-Chapelle", x: 50, y: 50 },
   ];
   const pts = city === "london" ? LONDON_POINTS : PARIS_POINTS;
-  const londonRiver = "M 0,58 C 15,62 25,55 35,60 S 50,65 60,56 S 75,50 85,54 S 95,52 100,55";
-  const parisRiver = "M 0,48 C 15,52 25,58 38,56 S 50,52 58,54 S 70,58 80,52 S 90,48 100,50";
+  // Thames flows roughly west to east with a big south bend around Westminster then north past Tower
+  const londonRiver = "M 0,72 C 12,70 20,68 30,67 S 36,66 40,63 S 48,56 55,54 S 62,50 70,50 S 80,48 90,50 L 100,50";
+  // Seine flows roughly east, curving south through central Paris
+  const parisRiver = "M 0,40 C 10,42 18,44 28,48 S 38,54 45,54 S 52,50 58,46 S 65,42 75,42 S 85,44 100,46";
   const river = city === "london" ? londonRiver : parisRiver;
   return (
     <div style={{ background: "#0d0d0d", border: "1px solid #222", borderRadius: 10, padding: 12, marginBottom: 16, position: "relative" }}>
@@ -462,7 +518,7 @@ function LondonDossier({ visited, wordClues, fragments }) {
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
-      <SpyMap locations={LOCS} visited={visited} city="london" />
+      <SpyMap visited={visited} city="london" />
       <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
         <ProgressBar label="LOCATIONS" current={visited.length} total={5} color="#4ade80" />
         <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
@@ -508,7 +564,7 @@ function ParisDossier({ parisVisited, fragments }) {
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: 2, marginBottom: 10, textAlign: "center" }}>PARIS</div>
-      <SpyMap locations={PARIS_LOCS} visited={parisVisited} city="paris" />
+      <SpyMap visited={parisVisited} city="paris" />
       <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
         <ProgressBar label="LOCATIONS" current={parisVisited.length} total={4} color="#4ade80" />
         <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
@@ -536,19 +592,20 @@ function ParisDossier({ parisVisited, fragments }) {
   );
 }
 
-/* ============ PUZZLE ============ */
-function Puzzle({ wordClues, onSolved }) {
+/* ============ PUZZLE (with linger) ============ */
+function Puzzle({ wordClues, onSolved, parisUnlocked }) {
   const [i1, setI1] = useState(""); const [i2, setI2] = useState("");
   const [s1, setS1] = useState(false); const [s2, setS2] = useState(false);
   const [e1, setE1] = useState(false); const [e2, setE2] = useState(false);
   const [ad, setAd] = useState(false);
+  const [linger, setLinger] = useState(false);
   const p1 = wordClues.some(w => w.word === "CROSS") && wordClues.some(w => w.word === "ANT");
   const p2 = wordClues.some(w => w.word === "EYE") && wordClues.some(w => w.word === "FELL");
-  useEffect(() => { if (s1 && s2) { setTimeout(() => setAd(true), 1500); setTimeout(() => onSolved(), 3000); } }, [s1, s2]);
+  useEffect(() => { if (s1 && s2 && !parisUnlocked) { setTimeout(() => setAd(true), 1500); setTimeout(() => setLinger(true), 3500); } }, [s1, s2]);
   const c1 = () => { if (i1.trim().toLowerCase() === "croissant") { setS1(true); setE1(false); } else setE1(true); };
   const c2 = () => { if (i2.trim().toLowerCase() === "eiffel") { setS2(true); setE2(false); } else setE2(true); };
   return (
-    <div style={{ height: "100%", padding: 20, overflowY: "auto" }}>
+    <div onClick={() => linger && onSolved()} style={{ height: "100%", padding: 20, overflowY: "auto", cursor: linger ? "pointer" : "default" }}>
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2, marginBottom: 8 }}>PATTERN DETECTED</div>
       <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, marginBottom: 18 }}>I've been analyzing your word clues. Try combining them — sound them out together.</div>
       {p1 && (
@@ -588,8 +645,18 @@ function Puzzle({ wordClues, onSolved }) {
       {ad && (
         <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 1s ease" }}>
           <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>THOSE ARE FRENCH.</div>
-          <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6 }}>Bellecourt must have worked outside London too. He's heading to...</div>
-          <div style={{ color: "#fff", fontFamily: "monospace", fontSize: 36, fontWeight: 900, letterSpacing: 8, marginTop: 12, textShadow: "0 0 30px rgba(250,204,21,0.3)" }}>PARIS</div>
+          <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6 }}>Bellecourt must also have hidden codes in another city...</div>
+        </div>
+      )}
+      {linger && (
+        <div style={{ marginTop: 20, textAlign: "center" }}>
+          <span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span>
+        </div>
+      )}
+      {parisUnlocked && (
+        <div style={{ marginTop: 16, textAlign: "center" }}>
+          <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2 }}>✓ PUZZLE SOLVED</div>
+          <div style={{ color: "#fff", fontFamily: "monospace", fontSize: 36, fontWeight: 900, letterSpacing: 8, marginTop: 8, textShadow: "0 0 30px rgba(250,204,21,0.3)" }}>PARIS</div>
         </div>
       )}
     </div>
@@ -597,60 +664,68 @@ function Puzzle({ wordClues, onSolved }) {
 }
 
 /* ============ CHAT ============ */
-function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFragments, msgs, setMsgs, parisVisited, setParisVisited, parisUnlocked, banners, setBanners }) {
+function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFragments, msgs, setMsgs, parisVisited, setParisVisited, parisUnlocked, setBannerQueue }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
   const fileRef = useRef(null);
-  useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight; }, [msgs, loading, banners]);
+  useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight; }, [msgs, loading]);
 
-  const addBanner = (type, value) => {
-    setBanners(p => [...p, { type, value, id: Date.now() }]);
+  // Banners are stored inline in messages as msg.banners = [{type, value}]
+  const addBannersToLastMsg = (bannerList) => {
+    if (bannerList.length === 0) return;
+    setMsgs(p => {
+      const n = [...p];
+      const last = { ...n[n.length - 1] };
+      last.banners = [...(last.banners || []), ...bannerList];
+      n[n.length - 1] = last;
+      return n;
+    });
   };
 
   const detectLoc = (t) => {
     const l = t.toLowerCase();
-    if ((l.includes("big ben") || l.includes("westminster")) && !visited.includes("bigben")) { setVisited(p => [...p, "bigben"]); addBanner("location", "Big Ben"); }
-    if (l.includes("tower of london") && !visited.includes("tower")) { setVisited(p => [...p, "tower"]); addBanner("location", "Tower of London"); }
-    if ((l.includes("st paul") || l.includes("saint paul")) && !visited.includes("stpauls")) { setVisited(p => [...p, "stpauls"]); addBanner("location", "St. Paul's Cathedral"); if (!wordClues.some(w => w.word === "CROSS")) { setWordClues(p => [...p, WORD_MAP.stpauls]); } }
-    if ((l.includes("buckingham") || l.includes("palace")) && !visited.includes("buckingham")) { setVisited(p => [...p, "buckingham"]); addBanner("location", "Buckingham Palace"); if (!wordClues.some(w => w.word === "FELL")) { setWordClues(p => [...p, WORD_MAP.buckingham]); } }
-    if (l.includes("london eye") && !visited.includes("eye")) { setVisited(p => [...p, "eye"]); addBanner("location", "London Eye"); if (!wordClues.some(w => w.word === "EYE")) { setWordClues(p => [...p, WORD_MAP.eye]); } }
-    // Paris locations
+    const pending = [];
+    if ((l.includes("big ben") || l.includes("westminster")) && !visited.includes("bigben")) { setVisited(p => [...p, "bigben"]); pending.push({ type: "location", value: "Big Ben" }); }
+    if (l.includes("tower of london") && !visited.includes("tower")) { setVisited(p => [...p, "tower"]); pending.push({ type: "location", value: "Tower of London" }); }
+    if ((l.includes("st paul") || l.includes("saint paul")) && !visited.includes("stpauls")) { setVisited(p => [...p, "stpauls"]); pending.push({ type: "location", value: "St. Paul's Cathedral" }); if (!wordClues.some(w => w.word === "CROSS")) { setWordClues(p => [...p, WORD_MAP.stpauls]); } }
+    if ((l.includes("buckingham") || l.includes("palace")) && !visited.includes("buckingham")) { setVisited(p => [...p, "buckingham"]); pending.push({ type: "location", value: "Buckingham Palace" }); if (!wordClues.some(w => w.word === "FELL")) { setWordClues(p => [...p, WORD_MAP.buckingham]); } }
+    if (l.includes("london eye") && !visited.includes("eye")) { setVisited(p => [...p, "eye"]); pending.push({ type: "location", value: "London Eye" }); if (!wordClues.some(w => w.word === "EYE")) { setWordClues(p => [...p, WORD_MAP.eye]); } }
     if (parisUnlocked) {
-      if (l.includes("louvre") && !parisVisited.includes("louvre")) { setParisVisited(p => [...p, "louvre"]); addBanner("location", "The Louvre"); }
-      if ((l.includes("sainte-chapelle") || l.includes("sainte chapelle") || l.includes("saint chapelle")) && !parisVisited.includes("chapelle")) { setParisVisited(p => [...p, "chapelle"]); addBanner("location", "Sainte-Chapelle"); }
-      if ((l.includes("sacré") || l.includes("sacre coeur") || l.includes("sacré-cœur") || l.includes("montmartre")) && !parisVisited.includes("sacrecoeur")) { setParisVisited(p => [...p, "sacrecoeur"]); addBanner("location", "Sacré-Cœur"); }
-      if (l.includes("eiffel") && !parisVisited.includes("eiffel")) { setParisVisited(p => [...p, "eiffel"]); addBanner("location", "Eiffel Tower"); }
+      if (l.includes("louvre") && !parisVisited.includes("louvre")) { setParisVisited(p => [...p, "louvre"]); pending.push({ type: "location", value: "The Louvre" }); }
+      if ((l.includes("sainte-chapelle") || l.includes("sainte chapelle") || l.includes("saint chapelle")) && !parisVisited.includes("chapelle")) { setParisVisited(p => [...p, "chapelle"]); pending.push({ type: "location", value: "Sainte-Chapelle" }); }
+      if ((l.includes("sacré") || l.includes("sacre coeur") || l.includes("sacré-cœur") || l.includes("montmartre")) && !parisVisited.includes("sacrecoeur")) { setParisVisited(p => [...p, "sacrecoeur"]); pending.push({ type: "location", value: "Sacré-Cœur" }); }
+      if (l.includes("eiffel") && !parisVisited.includes("eiffel")) { setParisVisited(p => [...p, "eiffel"]); pending.push({ type: "location", value: "Eiffel Tower" }); }
     }
+    return pending;
   };
 
   const detectResp = (t) => {
     const l = t.toLowerCase();
+    const pending = [];
     const frag = (num, idx) => {
       if (l.includes(num) && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) {
         setFragments(p => { if (p[idx] === num) return p; const n=[...p]; n[idx]=num; return n; });
-        addBanner("fragment", num);
+        pending.push({ type: "fragment", value: num });
       }
     };
     frag("92", 0); frag("02", 1); frag("45", 2);
     frag("41", 3); frag("31", 4); frag("98", 5);
-    // Collector intercept detection
     if (l.includes("collector") && (l.includes("intercepted") || l.includes("took this") || l.includes("step ahead") || l.includes("got here first"))) {
-      addBanner("collector", "\"I'm always a step ahead...\"");
+      pending.push({ type: "collector", value: "\"I'm always a step ahead...\"" });
     }
-    // Word clue: ANT
     if ((l.includes("ant") || l.includes("aunt")) && (l.includes("remember") || l.includes("word") || l.includes("strip") || l.includes("clue") || l.includes("dossier"))) {
       if (!wordClues.some(w => w.word === "ANT")) {
         setWordClues(p => [...p, WORD_MAP.friend]);
-        addBanner("word", "ANT");
+        pending.push({ type: "word", value: "ANT" });
       }
     }
-    // Word clues from Tru's response (CROSS, EYE, FELL)
     if (l.includes("word clue") || l.includes("word is")) {
-      if (l.includes("cross") && !wordClues.some(w => w.word === "CROSS")) addBanner("word", "CROSS");
-      if (l.includes("eye") && !wordClues.some(w => w.word === "EYE")) addBanner("word", "EYE");
-      if (l.includes("fell") && !wordClues.some(w => w.word === "FELL")) addBanner("word", "FELL");
+      if (l.includes("cross") && !wordClues.some(w => w.word === "CROSS")) pending.push({ type: "word", value: "CROSS" });
+      if (l.includes("eye") && !wordClues.some(w => w.word === "EYE")) pending.push({ type: "word", value: "EYE" });
+      if (l.includes("fell") && !wordClues.some(w => w.word === "FELL")) pending.push({ type: "word", value: "FELL" });
     }
+    return pending;
   };
 
   const handlePhoto = (e) => {
@@ -661,7 +736,13 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
       const nm = [...msgs, { role: "user", text: "[Photo uploaded]", image: url }];
       setMsgs(nm); setLoading(true);
       fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: nm.map(m => ({ role: m.role === "spy" ? "assistant" : "user", content: m.text })) }) })
-        .then(r => r.json()).then(d => { if (d.text) { detectResp(d.text); setMsgs(p => [...p, { role: "spy", text: d.text }]); } else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. — Tru" }]); })
+        .then(r => r.json()).then(d => {
+          if (d.text) {
+            const respBanners = detectResp(d.text);
+            const newMsg = { role: "spy", text: d.text, banners: respBanners.length > 0 ? respBanners : undefined };
+            setMsgs(p => [...p, newMsg]);
+          } else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. — Tru" }]);
+        })
         .catch(() => setMsgs(p => [...p, { role: "spy", text: "Channel disrupted. Try again. — Tru" }]))
         .finally(() => setLoading(false));
     };
@@ -671,13 +752,18 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
   const send = async () => {
     if (!input.trim() || loading) return;
     const msg = input.trim(); setInput("");
-    const nm = [...msgs, { role: "user", text: msg }];
-    setMsgs(nm); setLoading(true); detectLoc(msg);
+    const locBanners = detectLoc(msg);
+    const userMsg = { role: "user", text: msg, banners: locBanners.length > 0 ? locBanners : undefined };
+    const nm = [...msgs, userMsg];
+    setMsgs(nm); setLoading(true);
     try {
       const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: nm.map(m => ({ role: m.role === "spy" ? "assistant" : "user", content: m.text })) }) });
       const d = await r.json();
-      if (d.text) { detectResp(d.text); setMsgs(p => [...p, { role: "spy", text: d.text }]); }
-      else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. — Tru" }]);
+      if (d.text) {
+        const respBanners = detectResp(d.text);
+        const newMsg = { role: "spy", text: d.text, banners: respBanners.length > 0 ? respBanners : undefined };
+        setMsgs(p => [...p, newMsg]);
+      } else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. — Tru" }]);
     } catch { setMsgs(p => [...p, { role: "spy", text: "Channel disrupted. Try again. — Tru" }]); }
     setLoading(false);
   };
@@ -687,14 +773,14 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
       <div ref={ref} style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
         {msgs.map((m, i) => (
           <div key={`m${i}`}>
+            {/* Banners pinned above the message that earned them */}
+            {m.banners && m.banners.map((b, bi) => <ChatBanner key={`b${i}-${bi}`} type={b.type} value={b.value} />)}
             <div style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "85%", marginLeft: m.role === "user" ? "auto" : 0 }}>
               {m.image && <img src={m.image} alt="" style={{ width: "100%", maxWidth: 200, borderRadius: 10, marginBottom: 4 }} />}
               <div style={{ background: m.role === "user" ? "#1e3a5f" : "#1a1a1a", border: m.role === "user" ? "1px solid #2563eb" : "1px solid #333", borderRadius: 12, padding: "10px 12px", color: m.role === "user" ? "#93c5fd" : "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{m.text}</div>
             </div>
           </div>
         ))}
-        {/* Show banners at bottom of chat */}
-        {banners.map(b => <ChatBanner key={b.id} type={b.type} value={b.value} />)}
         {loading && <div style={{ alignSelf: "flex-start" }}><div style={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 12, padding: "10px 12px" }}><span style={{ color: "#facc15", fontFamily: "monospace" }}>● ● ●</span></div></div>}
       </div>
       <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} style={{ display: "none" }} />
@@ -708,84 +794,31 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
   );
 }
 
-/* ============ TAB BAR (color-coded stats) ============ */
+/* ============ TAB BAR ============ */
 function TabBar({ view, setView, visited, wordClues, fragments, parisUnlocked, parisVisited }) {
   const londonFrags = fragments.slice(0,3).filter(f=>f).length;
   const parisFrags = fragments.slice(3,6).filter(f=>f).length;
   const showPuzzle = wordClues.length >= 4;
-
-  const tb = (id, label, color, badge) => (
+  const londonBadge = (<span style={{ fontSize: 7, letterSpacing: 0 }}><span style={{ color: "#4ade80" }}>{visited.length}/5</span>{" · "}<span style={{ color: "#3b82f6" }}>{londonFrags}/3</span>{" · "}<span style={{ color: "#facc15" }}>{wordClues.length}/4</span></span>);
+  const parisBadge = (<span style={{ fontSize: 7, letterSpacing: 0 }}><span style={{ color: "#4ade80" }}>{parisVisited.length}/4</span>{" · "}<span style={{ color: "#3b82f6" }}>{parisFrags}/3</span></span>);
+  const tab = (id, label, color, badge, extra) => (
     <button key={id} onClick={() => setView(id)} style={{
       flex: 1, padding: "8px 2px", background: view === id ? "#111" : "transparent", border: "none",
       borderBottom: view === id ? `2px solid ${color}` : "2px solid transparent",
       color: view === id ? color : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
       letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+      ...(extra || {}),
     }}>
       <span>{label}</span>
-      {badge && <span style={{ fontSize: 7, letterSpacing: 0 }}>{badge}</span>}
+      {badge}
     </button>
   );
-
-  // Color-coded badge for London: green/blue/yellow
-  const londonBadge = (
-    <span style={{ fontSize: 7, letterSpacing: 0 }}>
-      <span style={{ color: "#4ade80" }}>{visited.length}/5</span>
-      {" · "}
-      <span style={{ color: "#3b82f6" }}>{londonFrags}/3</span>
-      {" · "}
-      <span style={{ color: "#facc15" }}>{wordClues.length}/4</span>
-    </span>
-  );
-  const parisBadge = (
-    <span style={{ fontSize: 7, letterSpacing: 0 }}>
-      <span style={{ color: "#4ade80" }}>{parisVisited.length}/4</span>
-      {" · "}
-      <span style={{ color: "#3b82f6" }}>{parisFrags}/3</span>
-    </span>
-  );
-
   return (
     <div style={{ display: "flex", borderBottom: "1px solid #222", flexShrink: 0 }}>
-      <button onClick={() => setView("chat")} style={{
-        flex: 1, padding: "8px 2px", background: view === "chat" ? "#111" : "transparent", border: "none",
-        borderBottom: view === "chat" ? "2px solid #4ade80" : "2px solid transparent",
-        color: view === "chat" ? "#4ade80" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
-        letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
-      }}>
-        <span>🟢 TRU</span>
-      </button>
-      <button onClick={() => setView("london")} style={{
-        flex: 1, padding: "8px 2px", background: view === "london" ? "#111" : "transparent", border: "none",
-        borderBottom: view === "london" ? "2px solid #facc15" : "2px solid transparent",
-        color: view === "london" ? "#facc15" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
-        letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
-      }}>
-        <span>LONDON</span>
-        {londonBadge}
-      </button>
-      {showPuzzle && (
-        <button onClick={() => setView("puzzle")} style={{
-          flex: 1, padding: "8px 2px", background: view === "puzzle" ? "#111" : "transparent", border: "none",
-          borderBottom: view === "puzzle" ? "2px solid #ef4444" : "2px solid transparent",
-          color: view === "puzzle" ? "#ef4444" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
-          letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
-          animation: !parisUnlocked ? "pulse 1.5s infinite" : "none",
-        }}>
-          <span>⚠ PUZZLE</span>
-          {parisUnlocked && <span style={{ fontSize: 7, color: "#4ade80" }}>SOLVED</span>}
-        </button>
-      )}
-      {parisUnlocked && (
-        <button onClick={() => setView("paris")} style={{
-          flex: 1, padding: "8px 2px", background: view === "paris" ? "#111" : "transparent", border: "none",
-          borderBottom: view === "paris" ? "2px solid #f97316" : "2px solid transparent",
-          color: view === "paris" ? "#f97316" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
-          letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
-        }}>
-          <span>PARIS</span>
-          {parisBadge}
-        </button>
-      )}
+      {tab("chat", "🟢 TRU", "#4ade80", null)}
+      {tab("london", "LONDON", "#facc15", londonBadge)}
+      {showPuzzle && tab("puzzle", "⚠ PUZZLE", "#ef4444", parisUnlocked ? <span style={{ fontSize: 7, color: "#4ade80" }}>SOLVED</span> : null, !parisUnlocked ? { animation: "pulse 1.5s infinite" } : {})}
+      {parisUnlocked && tab("paris", "PARIS", "#f97316", parisBadge)}
     </div>
   );
 }
@@ -802,24 +835,24 @@ export default function Home() {
   const [parisVisited, setParisVisited] = usePersist("oct_pv", []);
   const [view, setView] = useState("chat");
   const [msgs, setMsgs] = usePersist("oct_m", []);
-  const [banners, setBanners] = usePersist("oct_bn", []);
   const [parisRevealDone, setParisRevealDone] = usePersist("oct_prd", false);
   const [puzzleNudgeSent, setPuzzleNudgeSent] = usePersist("oct_pns", false);
 
-  // Auto-send puzzle nudge when all 4 word clues are collected (only once)
+  // Auto-send puzzle nudge when all 4 word clues AND all 3 London fragments collected (only once)
   useEffect(() => {
-    if (wordClues.length >= 4 && !puzzleNudgeSent && phase === "active") {
+    const londonFragsDone = fragments.slice(0,3).every(f => f);
+    if (wordClues.length >= 4 && londonFragsDone && !puzzleNudgeSent && phase === "active") {
       setPuzzleNudgeSent(true);
       setTimeout(() => {
         setMsgs(p => [...p, { role: "spy", text: "Agents — I've been studying these word clues. There's a pattern. Check the PUZZLE tab — try combining them. Sound them out.\n\n— Tru" }]);
       }, 2000);
     }
-  }, [wordClues.length, phase, puzzleNudgeSent]);
+  }, [wordClues.length, fragments, phase, puzzleNudgeSent]);
 
   // When puzzle is solved, trigger Paris reveal flow
   useEffect(() => {
     if (parisUnlocked && !parisRevealDone && phase === "active") {
-      setPhase("parisreveal");
+      setPhase("collectortaunt");
     }
   }, [parisUnlocked]);
 
@@ -834,9 +867,8 @@ export default function Home() {
     <Head><title>Operation Clocktower</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /></Head>
     <style jsx global>{`*{margin:0;padding:0;box-sizing:border-box}html,body,#__next{height:100%;background:#0a0a0a}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
   </>);
-  const wrap = c => <>{head}<div style={{ height: "100vh", maxWidth: 430, margin: "0 auto", background: "#0a0a0a", display: "flex", flexDirection: "column", borderLeft: "1px solid #1a1a1a", borderRight: "1px solid #1a1a1a" }}>{c}</div></>;
+  const wrap = c => <>{head}<div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>{c}</div></>;
 
-  /* --- PHASES --- */
   if (phase === "passcode") return wrap(<IS rk="pass" title="OPERATION CLOCKTOWER" subtitle="SECURE CHANNEL" prompt="ENTER MISSION CODE" placeholder="Mission code..." buttonText="ACCESS" errMsg="Invalid mission code." onSubmit={v => { if (v.trim().toUpperCase() === MC) { setPhase("intro"); return true; } return false; }} />);
 
   if (phase === "intro") return wrap(<TS id="intro" lines={[{t:"OPERATION CLOCKTOWER",s:"header"},{t:"SECURE CHANNEL",s:"sub"},{t:"",s:"sp"},{t:"Incoming transmission...",s:"dim",delay:800},{t:"",s:"sp"},{t:"Hello, agents.",s:"normal",delay:500},{t:"",s:"sp"},{t:"My name is Tru.",s:"bold"},{t:"",s:"sp"},{t:"Some of you may know me from the City Spies.",s:"normal"},{t:"",s:"sp"},{t:"Now I need a new team.",s:"normal"},{t:"",s:"sp"},{t:"But first — I need to make sure you are who I think you are.",s:"bold"}]} onDone={() => setPhase("verify")} />);
@@ -895,18 +927,19 @@ export default function Home() {
 
   if (phase === "codenames") return wrap(<CodenameReveal onDone={() => setPhase("active")} />);
 
-  /* --- PARIS REVEAL FLOW --- */
+  /* --- PARIS REVEAL FLOW: collector taunt → paris splash → paris locations --- */
+  if (phase === "collectortaunt") return wrap(<CollectorTaunt onDone={() => setPhase("parisreveal")} />);
   if (phase === "parisreveal") return wrap(<ParisReveal onDone={() => setPhase("parislocs")} />);
   if (phase === "parislocs") return wrap(<ParisLocsPreview onDone={() => { setParisRevealDone(true); setPhase("active"); setView("chat"); }} />);
 
   /* --- ACTIVE (tabs) --- */
   if (phase === "active") return (<>{head}
-    <div style={{ height: "100vh", maxWidth: 430, margin: "0 auto", background: "#0a0a0a", display: "flex", flexDirection: "column", borderLeft: "1px solid #1a1a1a", borderRight: "1px solid #1a1a1a" }}>
+    <div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>
       <TabBar view={view} setView={setView} visited={visited} wordClues={wordClues} fragments={fragments} parisUnlocked={parisUnlocked} parisVisited={parisVisited} />
       <div style={{ flex: 1, overflow: "hidden" }}>
-        {view === "chat" && <Chat visited={visited} setVisited={setVisited} wordClues={wordClues} setWordClues={setWordClues} fragments={fragments} setFragments={setFragments} msgs={msgs} setMsgs={setMsgs} parisVisited={parisVisited} setParisVisited={setParisVisited} parisUnlocked={parisUnlocked} banners={banners} setBanners={setBanners} />}
+        {view === "chat" && <Chat visited={visited} setVisited={setVisited} wordClues={wordClues} setWordClues={setWordClues} fragments={fragments} setFragments={setFragments} msgs={msgs} setMsgs={setMsgs} parisVisited={parisVisited} setParisVisited={setParisVisited} parisUnlocked={parisUnlocked} />}
         {view === "london" && <LondonDossier visited={visited} wordClues={wordClues} fragments={fragments} />}
-        {view === "puzzle" && <Puzzle wordClues={wordClues} onSolved={() => setParisUnlocked(true)} />}
+        {view === "puzzle" && <Puzzle wordClues={wordClues} onSolved={() => setParisUnlocked(true)} parisUnlocked={parisUnlocked} />}
         {view === "paris" && <ParisDossier parisVisited={parisVisited} fragments={fragments} />}
       </div>
     </div>
