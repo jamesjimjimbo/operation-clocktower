@@ -158,6 +158,14 @@ SAINTE-CHAPELLE (especially with concert):
 - Then: "I've traced The Collector to his final position. 11 Rue des Gravilliers. Get there tomorrow and see what you can find."
 - Do NOT give fragment or address before concert.
 
+ARC DE TRIOMPHE — No fragment:
+- Bellecourt connection: "His notes mention the Arc — he admired its geometry, the perfect arch, the way it commands the avenue."
+- Photo challenge: All three posed heroically with the Arc behind them
+- JAGUAR: "Find out how many names are engraved on the inner walls. Look for a sign or count what you can see."
+- OTTER: "What shape is the Arc? How many arches can you count?"
+- STINGRAY: "Stand at attention under the Arc like you just won a war. Salute. Hold it."
+- No fragment here. Say: "No fragment at this location, but Bellecourt appreciated the craftsmanship. The Collector won't find anything here either. Move on."
+
 EIFFEL TOWER AREA — Fragment 98:
 - Bellecourt connection: "His final notes describe the tower's geometry. He called it 'the perfect triangle.'"
 - Photo challenge: All three posed dramatically with the tower behind them
