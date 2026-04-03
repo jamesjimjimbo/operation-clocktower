@@ -381,6 +381,134 @@ function ChatBanner({ type, value }) {
   );
 }
 
+/* ============ MAP ICONS ============ */
+function MapIcon({ id, color }) {
+  const c = color;
+  const f = color === "#4ade80" ? "#0a1a0e" : "#111a12";
+  const o = color === "#4ade80" ? 1 : 0.7;
+  if (id === "bigben") return (
+    <svg width="30" height="40" viewBox="0 0 30 40" style={{ opacity: o }}>
+      <rect x="10" y="14" width="10" height="22" rx="1" fill={f} stroke={c} strokeWidth="0.8"/>
+      <circle cx="15" cy="22" r="4" fill={f} stroke={c} strokeWidth="0.7"/>
+      <circle cx="15" cy="22" r="3.2" fill="none" stroke={c} strokeWidth="0.3" opacity="0.5"/>
+      <line x1="15" y1="22" x2="15" y2="19" stroke={c} strokeWidth="0.6" strokeLinecap="round"/>
+      <line x1="15" y1="22" x2="17.2" y2="22.8" stroke={c} strokeWidth="0.5" strokeLinecap="round"/>
+      <circle cx="15" cy="22" r="0.6" fill={c}/>
+      <path d="M 12,14 L 15,4 L 18,14" fill={f} stroke={c} strokeWidth="0.7"/>
+      <line x1="15" y1="4" x2="15" y2="2" stroke={c} strokeWidth="0.5"/>
+      <rect x="13" y="30" width="4" height="5" rx="2" fill="none" stroke={c} strokeWidth="0.4" opacity="0.6"/>
+      <rect x="12" y="27" width="2" height="2" rx="0.3" fill={c} opacity="0.15"/>
+      <rect x="16" y="27" width="2" height="2" rx="0.3" fill={c} opacity="0.15"/>
+      <rect x="8" y="35" width="14" height="2" rx="0.5" fill={f} stroke={c} strokeWidth="0.4"/>
+    </svg>
+  );
+  if (id === "tower") return (
+    <svg width="32" height="32" viewBox="0 0 32 32" style={{ opacity: o }}>
+      <rect x="3" y="12" width="26" height="14" rx="1" fill={f} stroke={c} strokeWidth="0.7"/>
+      <rect x="2" y="5" width="7" height="10" rx="0.5" fill={f} stroke={c} strokeWidth="0.6"/>
+      <rect x="23" y="5" width="7" height="10" rx="0.5" fill={f} stroke={c} strokeWidth="0.6"/>
+      <rect x="11" y="4" width="10" height="16" rx="0.5" fill={f} stroke={c} strokeWidth="0.6"/>
+      {[2,5,24,27].map(bx => <rect key={bx} x={bx} y="3" width="2" height="2.5" rx="0.2" fill={c} opacity="0.25"/>)}
+      {[12,15,18].map(bx => <rect key={bx} x={bx} y="2" width="2" height="2.5" rx="0.2" fill={c} opacity="0.25"/>)}
+      <path d="M 13,26 L 13,20 Q 16,17 19,20 L 19,26" fill="none" stroke={c} strokeWidth="0.5"/>
+      <rect x="13" y="8" width="2" height="3" rx="0.5" fill={c} opacity="0.12"/>
+      <rect x="17" y="8" width="2" height="3" rx="0.5" fill={c} opacity="0.12"/>
+      <line x1="16" y1="4" x2="16" y2="0" stroke={c} strokeWidth="0.4"/>
+      <path d="M 16,0 L 20,1.5 L 16,3" fill={c} opacity="0.3"/>
+      <rect x="1" y="26" width="30" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+    </svg>
+  );
+  if (id === "stpauls") return (
+    <svg width="34" height="36" viewBox="0 0 34 36" style={{ opacity: o }}>
+      <rect x="5" y="18" width="24" height="12" rx="1" fill={f} stroke={c} strokeWidth="0.7"/>
+      {[8,12,17,22,26].map(lx => <line key={lx} x1={lx} y1="18" x2={lx} y2="30" stroke={c} strokeWidth="0.4" opacity="0.6"/>)}
+      <path d="M 10,18 Q 17,4 24,18" fill={f} stroke={c} strokeWidth="0.8"/>
+      <ellipse cx="17" cy="18" rx="7" ry="1.5" fill="none" stroke={c} strokeWidth="0.4" opacity="0.5"/>
+      <rect x="15" y="6" width="4" height="4" rx="0.5" fill={f} stroke={c} strokeWidth="0.4"/>
+      <line x1="17" y1="6" x2="17" y2="1" stroke={c} strokeWidth="0.6"/>
+      <line x1="15.5" y1="3" x2="18.5" y2="3" stroke={c} strokeWidth="0.6"/>
+      <rect x="3" y="30" width="28" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+      <rect x="1" y="32" width="32" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+    </svg>
+  );
+  if (id === "buckingham") return (
+    <svg width="36" height="30" viewBox="0 0 36 30" style={{ opacity: o }}>
+      <rect x="4" y="10" width="28" height="14" rx="1" fill={f} stroke={c} strokeWidth="0.7"/>
+      <rect x="2" y="6" width="8" height="8" rx="0.5" fill={f} stroke={c} strokeWidth="0.5"/>
+      <rect x="26" y="6" width="8" height="8" rx="0.5" fill={f} stroke={c} strokeWidth="0.5"/>
+      <rect x="13" y="12" width="10" height="12" rx="0.5" fill={f} stroke={c} strokeWidth="0.5"/>
+      {[15,18,21].map(lx => <line key={lx} x1={lx} y1="12" x2={lx} y2="24" stroke={c} strokeWidth="0.4" opacity="0.6"/>)}
+      {[[6,13],[9,13],[25,13],[28,13]].map(([wx,wy],wi) => <rect key={wi} x={wx} y={wy} width="2" height="2.5" rx="0.3" fill={c} opacity="0.15"/>)}
+      <line x1="18" y1="6" x2="18" y2="2" stroke={c} strokeWidth="0.4"/>
+      <rect x="18" y="2" width="3" height="2" rx="0.3" fill={c} opacity="0.2"/>
+      <line x1="0" y1="26" x2="36" y2="26" stroke={c} strokeWidth="0.3" opacity="0.5"/>
+      <rect x="2" y="24" width="32" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+    </svg>
+  );
+  if (id === "eye") return (
+    <svg width="34" height="38" viewBox="0 0 34 38" style={{ opacity: o }}>
+      <circle cx="17" cy="16" r="12" fill="none" stroke={c} strokeWidth="0.7"/>
+      <circle cx="17" cy="16" r="9" fill="none" stroke={c} strokeWidth="0.3" opacity="0.4"/>
+      {[0,1,2,3,4,5,6,7].map(si => { const a=si*Math.PI/4; const px=17+Math.cos(a)*12; const py=16+Math.sin(a)*12; return (
+        <g key={si}><line x1="17" y1="16" x2={px} y2={py} stroke={c} strokeWidth="0.35"/><circle cx={px} cy={py} r="1.8" fill={f} stroke={c} strokeWidth="0.5"/></g>
+      );})}
+      <circle cx="17" cy="16" r="2.5" fill={f} stroke={c} strokeWidth="0.5"/>
+      <circle cx="17" cy="16" r="1" fill={c} opacity="0.3"/>
+      <path d="M 12,28 L 17,36 L 22,28" fill="none" stroke={c} strokeWidth="0.6"/>
+      <line x1="12" y1="36" x2="22" y2="36" stroke={c} strokeWidth="0.4"/>
+    </svg>
+  );
+  if (id === "eiffel") return (
+    <svg width="26" height="42" viewBox="0 0 26 42" style={{ opacity: o }}>
+      <path d="M 13,2 L 8,16 L 5,30 L 2,40 L 24,40 L 21,30 L 18,16 Z" fill={f} stroke={c} strokeWidth="0.7"/>
+      <line x1="5" y1="30" x2="21" y2="30" stroke={c} strokeWidth="0.5"/>
+      <line x1="7" y1="22" x2="19" y2="22" stroke={c} strokeWidth="0.5"/>
+      <path d="M 9,16 Q 13,14 17,16" fill="none" stroke={c} strokeWidth="0.4" opacity="0.6"/>
+      <rect x="10" y="22" width="6" height="4" rx="0.5" fill={f} stroke={c} strokeWidth="0.4"/>
+      <line x1="13" y1="2" x2="13" y2="0" stroke={c} strokeWidth="0.5"/>
+      <line x1="4" y1="40" x2="2" y2="42" stroke={c} strokeWidth="0.4"/>
+      <line x1="22" y1="40" x2="24" y2="42" stroke={c} strokeWidth="0.4"/>
+      {[6,8,10,15,17,19].map(lx => <line key={lx} x1={lx} y1="30" x2={lx} y2="40" stroke={c} strokeWidth="0.2" opacity="0.4"/>)}
+    </svg>
+  );
+  if (id === "arcdetriomphe") return (
+    <svg width="32" height="32" viewBox="0 0 32 32" style={{ opacity: o }}>
+      <rect x="3" y="4" width="26" height="24" rx="1" fill={f} stroke={c} strokeWidth="0.7"/>
+      <rect x="1" y="2" width="30" height="4" rx="0.5" fill={f} stroke={c} strokeWidth="0.5"/>
+      <path d="M 10,28 L 10,16 Q 16,10 22,16 L 22,28" fill={f} stroke={c} strokeWidth="0.6"/>
+      {[5,7,24,26].map(lx => <line key={lx} x1={lx} y1="6" x2={lx} y2="28" stroke={c} strokeWidth="0.3" opacity="0.5"/>)}
+      <rect x="12" y="7" width="8" height="5" rx="0.3" fill={c} opacity="0.1"/>
+      <rect x="1" y="28" width="30" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.4"/>
+      <line x1="16" y1="2" x2="16" y2="0" stroke={c} strokeWidth="0.4"/>
+    </svg>
+  );
+  if (id === "louvre") return (
+    <svg width="34" height="30" viewBox="0 0 34 30" style={{ opacity: o }}>
+      <rect x="2" y="18" width="30" height="8" rx="0.5" fill={f} stroke={c} strokeWidth="0.6"/>
+      <path d="M 8,18 L 17,4 L 26,18 Z" fill={f} stroke={c} strokeWidth="0.7"/>
+      <path d="M 12,18 L 17,8 L 22,18" fill="none" stroke={c} strokeWidth="0.3" opacity="0.5"/>
+      {[5,9,13,21,25,29].map(lx => <line key={lx} x1={lx} y1="18" x2={lx} y2="26" stroke={c} strokeWidth="0.3" opacity="0.5"/>)}
+      <rect x="0" y="26" width="34" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+      <line x1="17" y1="4" x2="17" y2="2" stroke={c} strokeWidth="0.4"/>
+    </svg>
+  );
+  if (id === "chapelle") return (
+    <svg width="28" height="38" viewBox="0 0 28 38" style={{ opacity: o }}>
+      <rect x="4" y="14" width="20" height="18" rx="0.5" fill={f} stroke={c} strokeWidth="0.7"/>
+      <path d="M 4,14 L 14,4 L 24,14" fill={f} stroke={c} strokeWidth="0.6"/>
+      <line x1="14" y1="4" x2="14" y2="0" stroke={c} strokeWidth="0.5"/>
+      <line x1="12.5" y1="2" x2="15.5" y2="2" stroke={c} strokeWidth="0.5"/>
+      {[8,11,17,20].map(wx => <rect key={wx} x={wx} y="16" width="2.5" height="8" rx="1.2" fill={c} opacity="0.15" stroke={c} strokeWidth="0.3"/>)}
+      <path d="M 10,32 L 10,26 Q 14,23 18,26 L 18,32" fill="none" stroke={c} strokeWidth="0.5"/>
+      <circle cx="14" cy="10" r="2.5" fill="none" stroke={c} strokeWidth="0.4"/>
+      <circle cx="14" cy="10" r="1.5" fill={c} opacity="0.1"/>
+      <rect x="2" y="32" width="24" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+      <rect x="0" y="34" width="28" height="2" rx="0.3" fill={f} stroke={c} strokeWidth="0.3"/>
+    </svg>
+  );
+  return null;
+}
+
 /* ============ SPY MAP ============ */
 function SpyMap({ visited, city }) {
   const LONDON_PINS = [
@@ -412,13 +540,8 @@ function SpyMap({ visited, city }) {
           return (
             <div key={pin.id} style={{ position: "absolute", left: `${pin.x}%`, top: `${pin.y}%`, transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none" }}>
               {v && <div style={{ position: "absolute", width: 50, height: 50, borderRadius: "50%", border: "1px solid #4ade80", opacity: 0.15, animation: "pulse 2s infinite", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />}
-              <svg width="16" height="20" viewBox="0 0 16 20">
-                <path d="M 8 0 C 3.6 0 0 3.6 0 8 C 0 12.4 8 20 8 20 S 16 12.4 16 8 C 16 3.6 12.4 0 8 0 Z" fill={col} />
-                <circle cx="8" cy="8" r="3" fill={v ? "#fff" : "#333"} />
-              </svg>
-              <div style={{ marginTop: 1 }}>
-                <span style={{ color: col, fontFamily: "monospace", fontSize: 6, fontWeight: 700, letterSpacing: 0.3 }}>{pin.label}</span>
-              </div>
+              <MapIcon id={pin.id} color={col} />
+              <div style={{ marginTop: 1 }}><span style={{ color: col, fontFamily: "monospace", fontSize: 7, fontWeight: 700, letterSpacing: 0.5 }}>{pin.label}</span></div>
             </div>
           );
         })}
