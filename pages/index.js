@@ -23,7 +23,7 @@ const LOCS = [
 const PARIS_LOCS = [
   { id: "louvre", label: "The Louvre", color: "#f97316" },
   { id: "chapelle", label: "Sainte-Chapelle", color: "#a855f7" },
-  { id: "sacrecoeur", label: "Sacré-Cœur", color: "#ec4899" },
+  { id: "arcdetriomphe", label: "Arc de Triomphe", color: "#ec4899" },
   { id: "eiffel", label: "Eiffel Tower", color: "#facc15" },
 ];
 const WORD_MAP = {
@@ -694,7 +694,7 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
     if (parisUnlocked) {
       if (l.includes("louvre") && !parisVisited.includes("louvre")) { setParisVisited(p => [...p, "louvre"]); pending.push({ type: "location", value: "The Louvre" }); }
       if ((l.includes("sainte-chapelle") || l.includes("sainte chapelle") || l.includes("saint chapelle")) && !parisVisited.includes("chapelle")) { setParisVisited(p => [...p, "chapelle"]); pending.push({ type: "location", value: "Sainte-Chapelle" }); }
-      if ((l.includes("sacré") || l.includes("sacre coeur") || l.includes("sacré-cœur") || l.includes("montmartre")) && !parisVisited.includes("sacrecoeur")) { setParisVisited(p => [...p, "sacrecoeur"]); pending.push({ type: "location", value: "Sacré-Cœur" }); }
+      if ((l.includes("arc de triomphe") || l.includes("triomphe") || l.includes("champs")) && !parisVisited.includes("arcdetriomphe")) { setParisVisited(p => [...p, "arcdetriomphe"]); pending.push({ type: "location", value: "Arc de Triomphe" }); }
       if (l.includes("eiffel") && !parisVisited.includes("eiffel")) { setParisVisited(p => [...p, "eiffel"]); pending.push({ type: "location", value: "Eiffel Tower" }); }
     }
     return pending;
