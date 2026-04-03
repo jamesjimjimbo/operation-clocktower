@@ -545,7 +545,6 @@ function LondonDossier({ visited, wordClues, fragments }) {
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
-      <SpyMap visited={visited} city="london" />
       <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
         <ProgressBar label="LOCATIONS" current={visited.length} total={5} color="#4ade80" />
         <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
@@ -571,7 +570,7 @@ function LondonDossier({ visited, wordClues, fragments }) {
         ))}
       </div>
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginBottom: 10 }}>WORD CLUES</div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 }}>
         {wordClues.map((w, i) => (
           <div key={i} style={{ background: "#111", border: "1px solid #facc15", borderRadius: 8, padding: "6px 12px" }}>
             <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700, letterSpacing: 2 }}>{w.word}</div>
@@ -580,6 +579,7 @@ function LondonDossier({ visited, wordClues, fragments }) {
         ))}
         {wordClues.length === 0 && <div style={{ color: "#333", fontFamily: "monospace", fontSize: 12 }}>No word clues yet.</div>}
       </div>
+      <SpyMap visited={visited} city="london" />
     </div>
   );
 }
@@ -591,7 +591,6 @@ function ParisDossier({ parisVisited, fragments }) {
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: 2, marginBottom: 10, textAlign: "center" }}>PARIS</div>
-      <SpyMap visited={parisVisited} city="paris" />
       <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
         <ProgressBar label="LOCATIONS" current={parisVisited.length} total={4} color="#4ade80" />
         <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
@@ -608,13 +607,14 @@ function ParisDossier({ parisVisited, fragments }) {
         );
       })}
       <div style={{ color: "#3b82f6", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, marginTop: 18, marginBottom: 10 }}>CODE FRAGMENTS</div>
-      <div style={{ display: "flex", gap: 6 }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
         {[3,4,5].map(i => (
           <div key={i} style={{ width: 44, height: 38, borderRadius: 6, background: fragments[i] ? "#111" : "#0a0a0a", border: fragments[i] ? "1px solid #3b82f6" : "1px solid #222", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: fragments[i] ? "#3b82f6" : "#333", fontFamily: "monospace", fontSize: 16, fontWeight: 700 }}>{fragments[i] || "??"}</span>
           </div>
         ))}
       </div>
+      <SpyMap visited={parisVisited} city="paris" />
     </div>
   );
 }
