@@ -21,10 +21,10 @@ const LOCS = [
   { id: "eye", label: "London Eye", color: "#06b6d4" },
 ];
 const PARIS_LOCS = [
-  { id: "louvre", label: "The Louvre", color: "#f97316" },
-  { id: "chapelle", label: "Sainte-Chapelle", color: "#a855f7" },
-  { id: "arcdetriomphe", label: "Arc de Triomphe", color: "#ec4899" },
-  { id: "eiffel", label: "Eiffel Tower", color: "#facc15" },
+  { id: "louvre", label: "The Louvre", color: "#f97316", img: `${IMG}/Louvre.jpg` },
+  { id: "chapelle", label: "Sainte-Chapelle", color: "#a855f7", img: `${IMG}/Sainte-Chapelle.jpg` },
+  { id: "arcdetriomphe", label: "Arc de Triomphe", color: "#ec4899", img: `${IMG}/arc-de-triomphe.webp` },
+  { id: "eiffel", label: "Eiffel Tower", color: "#facc15", img: `${IMG}/Eiffel-Tower.webp` },
 ];
 const WORD_MAP = {
   stpauls: { word: "CROSS", from: "St. Paul's" },
@@ -328,7 +328,7 @@ function ParisLocsPreview({ onDone }) {
           {PARIS_LOCS.slice(0, rev).map(loc => (
             <div key={loc.id} style={{ background: "#111", border: "1px solid #333", borderRadius: 10, overflow: "hidden", animation: "fadeIn 0.4s ease" }}>
               <div style={{ width: "100%", height: 80, overflow: "hidden", background: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {loc.img ? <img src={loc.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> :
+                {loc.img ? <img src={loc.img} alt="" style={{ width: "100%", height: 80, objectFit: "cover", display: "block" }} /> :
                   <span style={{ color: "#333", fontFamily: "monospace", fontSize: 24 }}>?</span>}
               </div>
               <div style={{ padding: "6px 8px" }}><div style={{ color: loc.color, fontFamily: "'Courier New', monospace", fontSize: 10, fontWeight: 700, letterSpacing: 1 }}>{loc.label}</div></div>
@@ -452,62 +452,55 @@ function ChatBanner({ type, value }) {
 
 /* ============ SPY MAP ============ */
 function SpyMap({ visited, city }) {
-  // London: based on satellite map — Big Ben southwest, Tower of London far east, St Paul's mid-east, Buckingham Palace south-west, London Eye near Big Ben south of river
-  const LONDON_POINTS = [
-    { id: "bigben", label: "Big Ben", x: 35, y: 65 },
-    { id: "eye", label: "London Eye", x: 38, y: 60 },
-    { id: "buckingham", label: "Buckingham Palace", x: 28, y: 58 },
-    { id: "stpauls", label: "St. Paul's", x: 55, y: 50 },
-    { id: "tower", label: "Tower of London", x: 72, y: 52 },
+  const LONDON_PINS = [
+    { id: "buckingham", label: "Buckingham", x: 22, y: 52 },
+    { id: "bigben", label: "Big Ben", x: 35, y: 50 },
+    { id: "eye", label: "London Eye", x: 43, y: 45 },
+    { id: "stpauls", label: "St. Paul's", x: 58, y: 25 },
+    { id: "tower", label: "Tower", x: 78, y: 35 },
   ];
-  // Paris: Eiffel Tower west, Arc de Triomphe northwest, Louvre center-east, Sainte-Chapelle center on Île de la Cité
-  const PARIS_POINTS = [
-    { id: "eiffel", label: "Eiffel Tower", x: 25, y: 52 },
-    { id: "arcdetriomphe", label: "Arc de Triomphe", x: 22, y: 35 },
-    { id: "louvre", label: "The Louvre", x: 52, y: 42 },
-    { id: "chapelle", label: "Sainte-Chapelle", x: 50, y: 50 },
+  const PARIS_PINS = [
+    { id: "arcdetriomphe", label: "Arc de Triomphe", x: 18, y: 18 },
+    { id: "eiffel", label: "Eiffel Tower", x: 22, y: 42 },
+    { id: "louvre", label: "Louvre", x: 42, y: 38 },
+    { id: "chapelle", label: "Ste-Chapelle", x: 48, y: 50 },
   ];
-  const pts = city === "london" ? LONDON_POINTS : PARIS_POINTS;
-  // Thames flows roughly west to east with a big south bend around Westminster then north past Tower
-  const londonRiver = "M 0,72 C 12,70 20,68 30,67 S 36,66 40,63 S 48,56 55,54 S 62,50 70,50 S 80,48 90,50 L 100,50";
-  // Seine flows roughly east, curving south through central Paris
-  const parisRiver = "M 0,40 C 10,42 18,44 28,48 S 38,54 45,54 S 52,50 58,46 S 65,42 75,42 S 85,44 100,46";
-  const river = city === "london" ? londonRiver : parisRiver;
+  const pins = city === "london" ? LONDON_PINS : PARIS_PINS;
+  const mapImg = city === "london" ? `${IMG}/London-map.png` : `${IMG}/Paris-map.png`;
+
   return (
-    <div style={{ background: "#0d0d0d", border: "1px solid #222", borderRadius: 10, padding: 12, marginBottom: 16, position: "relative" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-        <span style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 10, letterSpacing: 2, fontWeight: 700 }}>FIELD MAP</span>
-        <span style={{ color: "#333", fontFamily: "monospace", fontSize: 8, letterSpacing: 1 }}>{city === "london" ? "51.5074° N, 0.1278° W" : "48.8566° N, 2.3522° E"}</span>
+    <div style={{ borderRadius: 10, overflow: "hidden", marginBottom: 14, border: "1px solid #222" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 10px", background: "#0d0d0d" }}>
+        <span style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 9, letterSpacing: 2, fontWeight: 700 }}>FIELD MAP</span>
+        <span style={{ color: "#333", fontFamily: "monospace", fontSize: 7, letterSpacing: 1 }}>{city === "london" ? "51.5074° N" : "48.8566° N"}</span>
       </div>
-      <svg viewBox="0 0 100 90" style={{ width: "100%", height: "auto" }}>
-        {[20,40,60,80].map(x => <line key={`gx${x}`} x1={x} y1={0} x2={x} y2={90} stroke="#151515" strokeWidth="0.3" />)}
-        {[20,40,60,80].map(y => <line key={`gy${y}`} x1={0} y1={y} x2={100} y2={y} stroke="#151515" strokeWidth="0.3" />)}
-        <path d={river} fill="none" stroke="#1a3a4a" strokeWidth="2.5" opacity="0.6" />
-        <path d={river} fill="none" stroke="#1e4d5e" strokeWidth="1" opacity="0.3" />
-        {pts.map(pt => {
-          const v = visited.includes(pt.id);
+      <div style={{ position: "relative", width: "100%", paddingBottom: "70%", background: "#1a1c1a" }}>
+        <img src={mapImg} alt="" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }} />
+        {pins.map(pin => {
+          const v = visited.includes(pin.id);
           return (
-            <g key={pt.id}>
-              {v && <circle cx={pt.x} cy={pt.y} r="4" fill="none" stroke="#4ade80" strokeWidth="0.5" opacity="0.4">
-                <animate attributeName="r" from="3" to="7" dur="2s" repeatCount="indefinite" />
-                <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite" />
-              </circle>}
-              <circle cx={pt.x} cy={pt.y} r="2.5" fill={v ? "#4ade80" : "#333"} stroke={v ? "#4ade80" : "#444"} strokeWidth="0.5" />
-              {v && <circle cx={pt.x} cy={pt.y} r="1" fill="#fff" opacity="0.6" />}
-              <text x={pt.x} y={pt.y - 5} textAnchor="middle" fill={v ? "#4ade80" : "#555"} fontSize="3.2" fontFamily="monospace" fontWeight={v ? "700" : "400"} letterSpacing="0.3">
-                {pt.label.toUpperCase()}
-              </text>
-              {v && <text x={pt.x} y={pt.y + 6.5} textAnchor="middle" fill="#4ade80" fontSize="2" fontFamily="monospace" letterSpacing="0.5" opacity="0.7">
-                INVESTIGATED
-              </text>}
-            </g>
+            <div key={pin.id} style={{ position: "absolute", left: `${pin.x}%`, top: `${pin.y}%`, transform: "translate(-50%, -100%)", display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none" }}>
+              {/* Label pill */}
+              <div style={{
+                background: v ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.5)",
+                border: v ? "1px solid #4ade80" : "1px solid #555",
+                borderRadius: 4, padding: "2px 6px", marginBottom: 2, whiteSpace: "nowrap",
+              }}>
+                <span style={{ color: v ? "#4ade80" : "#888", fontFamily: "monospace", fontSize: 8, fontWeight: 700, letterSpacing: 0.5 }}>{pin.label}</span>
+              </div>
+              {/* Pin marker */}
+              <svg width="16" height="20" viewBox="0 0 16 20">
+                {v && <circle cx="8" cy="8" r="8" fill="#4ade80" opacity="0.2">
+                  <animate attributeName="r" from="6" to="12" dur="2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" from="0.3" to="0" dur="2s" repeatCount="indefinite" />
+                </circle>}
+                <path d="M 8 0 C 3.6 0 0 3.6 0 8 C 0 12.4 8 20 8 20 S 16 12.4 16 8 C 16 3.6 12.4 0 8 0 Z" fill={v ? "#4ade80" : "#555"} />
+                <circle cx="8" cy="8" r="3" fill={v ? "#fff" : "#333"} />
+              </svg>
+            </div>
           );
         })}
-        <path d="M 2,2 L 8,2 M 2,2 L 2,8" stroke="#333" strokeWidth="0.4" fill="none" />
-        <path d="M 98,2 L 92,2 M 98,2 L 98,8" stroke="#333" strokeWidth="0.4" fill="none" />
-        <path d="M 2,88 L 8,88 M 2,88 L 2,82" stroke="#333" strokeWidth="0.4" fill="none" />
-        <path d="M 98,88 L 92,88 M 98,88 L 98,82" stroke="#333" strokeWidth="0.4" fill="none" />
-      </svg>
+      </div>
     </div>
   );
 }
