@@ -1,32 +1,4 @@
-/* ============ SPY MAP ============ */
-function SpyMap({ visited, city }) {
-  const LONDON_PINS = [
-    { id: "buckingham", label: "BUCKINGHAM", x: 22, y: 52 },
-    { id: "bigben", label: "BIG BEN", x: 35, y: 50 },
-    { id: "eye", label: "LONDON EYE", x: 43, y: 45 },
-    { id: "stpauls", label: "ST. PAUL'S", x: 58, y: 25 },
-    { id: "tower", label: "TOWER", x: 78, y: 35 },
-  ];
-  const PARIS_PINS = [
-    { id: "arcdetriomphe", label: "ARC DE TRIOMPHE", x: 18, y: 18 },
-    { id: "eiffel", label: "EIFFEL TOWER", x: 22, y: 42 },
-    { id: "louvre", label: "LOUVRE", x: 42, y: 38 },
-    { id: "chapelle", label: "STE-CHAPELLE", x: 48, y: 50 },
-  ];
-  const pins = city === "london" ? LONDON_PINS : PARIS_PINS;
-  const mapImg = city === "london" ? `${IMG}/London-map.png` : `${IMG}/Paris-map.png`;
 
-  const icons = {
-    bigben: (col) => (
-      <svg width="24" height="32" viewBox="0 0 24 32">
-        <rect x="9" y="10" width="6" height="18" rx="0.5" fill="none" stroke={col} strokeWidth="0.8"/>
-        <circle cx="12" cy="16" r="3" fill="none" stroke={col} strokeWidth="0.6"/>
-        <line x1="12" y1="16" x2="12" y2="13.5" stroke={col} strokeWidth="0.5"/>
-        <line x1="12" y1="16" x2="14" y2="16.5" stroke={col} strokeWidth="0.5"/>
-        <path d="M 10,10 L 12,4 L 14,10" fill="none" stroke={col} strokeWidth="0.7"/>
-      </svg>
-    ),
-    tower: (col) => (
 import { useState, useEffect, useRef, useCallback } from "react";
 import Head from "next/head";
 
