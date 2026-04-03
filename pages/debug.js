@@ -2,6 +2,18 @@ export default function Debug() {
   const set = (mode) => {
     if (mode === "reset") {
       localStorage.clear();
+    } else if (mode === "briefing") {
+      localStorage.setItem("oct_p", JSON.stringify("briefing"));
+      localStorage.setItem("oct_bi", JSON.stringify(0));
+      localStorage.setItem("oct_v", JSON.stringify([]));
+      localStorage.setItem("oct_w", JSON.stringify([]));
+      localStorage.setItem("oct_f", JSON.stringify(["","","","","",""]));
+      localStorage.setItem("oct_pu", JSON.stringify(false));
+      localStorage.setItem("oct_pv", JSON.stringify([]));
+      localStorage.setItem("oct_bn", JSON.stringify([]));
+      localStorage.setItem("oct_prd", JSON.stringify(false));
+      localStorage.setItem("oct_pns", JSON.stringify(false));
+      localStorage.setItem("oct_m", JSON.stringify([]));
     } else if (mode === "london") {
       localStorage.setItem("oct_p", JSON.stringify("active"));
       localStorage.setItem("oct_bi", JSON.stringify(99));
@@ -14,6 +26,18 @@ export default function Debug() {
       localStorage.setItem("oct_prd", JSON.stringify(false));
       localStorage.setItem("oct_pns", JSON.stringify(false));
       localStorage.setItem("oct_m", JSON.stringify([{role:"spy",text:"JAGUAR. OTTER. STINGRAY.\n\nYou're officially active.\n\nAct like tourists. Check in at landmarks.\n\n— Tru"}]));
+    } else if (mode === "londonmid") {
+      localStorage.setItem("oct_p", JSON.stringify("active"));
+      localStorage.setItem("oct_bi", JSON.stringify(99));
+      localStorage.setItem("oct_v", JSON.stringify(["bigben","tower","stpauls"]));
+      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"}]));
+      localStorage.setItem("oct_f", JSON.stringify(["92","02","45","","",""]));
+      localStorage.setItem("oct_pu", JSON.stringify(false));
+      localStorage.setItem("oct_pv", JSON.stringify([]));
+      localStorage.setItem("oct_bn", JSON.stringify([]));
+      localStorage.setItem("oct_prd", JSON.stringify(false));
+      localStorage.setItem("oct_pns", JSON.stringify(false));
+      localStorage.setItem("oct_m", JSON.stringify([{role:"spy",text:"Three fragments collected and one word clue. Keep going, agents. Bellecourt's trail continues.\n\n— Tru"}]));
     } else if (mode === "puzzle") {
       localStorage.setItem("oct_p", JSON.stringify("active"));
       localStorage.setItem("oct_bi", JSON.stringify(99));
@@ -73,7 +97,9 @@ export default function Debug() {
       <div style={{ color: "#e0e0e0", fontFamily: "monospace", fontSize: 20, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>DEBUG MENU</div>
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 12, marginBottom: 32 }}>Tap a button, then you'll be redirected to the main site.</div>
       <button style={s} onClick={() => set("reset")}>RESET</button>
+      <button style={s} onClick={() => set("briefing")}>SKIP TO BRIEFING</button>
       <button style={s} onClick={() => set("london")}>SKIP TO LONDON</button>
+      <button style={{...s, fontSize: 11}} onClick={() => set("londonmid")}>LONDON (3 locations)</button>
       <button style={s} onClick={() => set("puzzle")}>SKIP TO PUZZLE</button>
       <button style={s} onClick={() => set("paris")}>SKIP TO PARIS (start)</button>
       <button style={s} onClick={() => set("parismid")}>SKIP TO PARIS (midway)</button>
