@@ -39,8 +39,8 @@ const BRIEFING = [
     { t: "Hidden inside each is a fragment of a master code — a code that unlocks a vault containing his greatest invention.", s: "normal" },{ t: "", s: "sp" },
     { t: "For a century, no one knew.", s: "normal" },{ t: "", s: "sp" },{ t: "Now someone does.", s: "bold" },
   ]},
-  { id: "b2", special: "collector" },
   { id: "london", special: "london" },
+  { id: "b2", special: "collector" },
   { id: "b3", lines: [
     { t: "YOUR TEAM", s: "header" },{ t: "", s: "sp" },
     { t: "Your father — codename MOTHER — and your brother Callum are already en route to London.", s: "normal" },{ t: "", s: "sp" },
@@ -97,15 +97,17 @@ function TL({ text, style, onDone, skip }) {
   const [d, setD] = useState(null);
   const i = useRef(0);
   const iv = useRef(null);
+  const doneFired = useRef(false);
   useEffect(() => {
-    if (style === "sp" || !text) { onDone?.(); return; }
+    doneFired.current = false;
+    if (style === "sp" || !text) { if (!doneFired.current) { doneFired.current = true; onDone?.(); } return; }
     i.current = 0; setD("");
     const sp = (style === "normal" || style === "roledesc" || style === "dim") ? 18 : 28;
-    iv.current = setInterval(() => { i.current++; setD(text.slice(0, i.current)); if (i.current >= text.length) { clearInterval(iv.current); onDone?.(); } }, sp);
+    iv.current = setInterval(() => { i.current++; setD(text.slice(0, i.current)); if (i.current >= text.length) { clearInterval(iv.current); if (!doneFired.current) { doneFired.current = true; onDone?.(); } } }, sp);
     return () => clearInterval(iv.current);
   }, [text, style]);
   useEffect(() => {
-    if (skip && iv.current && text) { clearInterval(iv.current); setD(text); onDone?.(); }
+    if (skip && text && !doneFired.current) { if (iv.current) clearInterval(iv.current); setD(text); doneFired.current = true; onDone?.(); }
   }, [skip]);
   if (style === "sp") return <div style={{ height: 14 }} />;
   if (d === null) return <div style={{ minHeight: 20 }} />;
@@ -164,16 +166,16 @@ function IS({ title, subtitle, prompt, placeholder, onSubmit, errMsg, buttonText
   );
 }
 
-/* ============ COLLECTOR REVEAL (dramatic) ============ */
+/* ============ COLLECTOR REVEAL (dramatic, after London) ============ */
 function CollectorReveal({ onDone }) {
   const [phase, setPhase] = useState(0);
   useEffect(() => {
     const timers = [
       setTimeout(() => setPhase(1), 500),
-      setTimeout(() => setPhase(2), 1800),
-      setTimeout(() => setPhase(3), 3200),
-      setTimeout(() => setPhase(4), 5000),
-      setTimeout(() => setPhase(5), 6500),
+      setTimeout(() => setPhase(2), 2000),
+      setTimeout(() => setPhase(3), 3500),
+      setTimeout(() => setPhase(4), 5500),
+      setTimeout(() => setPhase(5), 8000),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -194,14 +196,18 @@ function CollectorReveal({ onDone }) {
         </div>
       )}
       {phase >= 3 && (
-        <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3 }}>
-          <div style={{ color: "#ef4444", fontFamily: "'Courier New', monospace", fontSize: 22, fontWeight: 900, letterSpacing: 5 }}>THE COLLECTOR</div>
-          <div style={{ color: "#888", fontFamily: "monospace", fontSize: 12, marginTop: 8, maxWidth: 280, lineHeight: 1.6 }}>An operative hunting for the fragments. We don't know who he is. We don't know how close he is.</div>
+        <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}>
+          <div style={{ color: "#ef4444", fontFamily: "'Courier New', monospace", fontSize: 22, fontWeight: 900, letterSpacing: 5, marginBottom: 12 }}>THE COLLECTOR</div>
+          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>
+            "You're not alone on this, City Spies... I'm hunting these same fragments for Umbra."
+          </div>
         </div>
       )}
       {phase >= 4 && (
-        <div style={{ marginTop: 16, color: "#fff", fontFamily: "monospace", fontSize: 14, fontWeight: 700, animation: "fadeIn 0.6s ease", zIndex: 3 }}>
-          But we know where he's heading.
+        <div style={{ marginTop: 12, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}>
+          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>
+            "Good luck beating me to them... I'll always be a step ahead of you."
+          </div>
         </div>
       )}
       {phase >= 5 && (
@@ -222,6 +228,7 @@ function LondonReveal({ onDone }) {
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}><img src={`${IMG}/london.jpg`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }} /></div>
       {s && <>
         <div style={{ position: "relative", zIndex: 1, color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 10, textShadow: "0 0 40px rgba(250,204,21,0.4)", animation: "fadeIn 1s ease" }}>LONDON</div>
+        <div style={{ position: "relative", zIndex: 1, color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, marginTop: 12, textAlign: "center", maxWidth: 280, lineHeight: 1.6 }}>You're going to London to find the fragments.</div>
         <div style={{ position: "relative", zIndex: 1, marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
       </>}
     </div>
@@ -381,11 +388,70 @@ function ChatBanner({ type, value }) {
     location: { bg: "#0a2e1a", border: "#4ade80", color: "#4ade80", icon: "📍", label: "NEW LOCATION" },
     fragment: { bg: "#0a1a2e", border: "#3b82f6", color: "#3b82f6", icon: "🔢", label: "FRAGMENT ACQUIRED" },
     word: { bg: "#2e2a0a", border: "#facc15", color: "#facc15", icon: "🔤", label: "WORD CLUE" },
+    collector: { bg: "#2e0a0a", border: "#ef4444", color: "#ef4444", icon: "⚠", label: "INTERCEPTED BY THE COLLECTOR" },
   }[type] || {};
   return (
     <div style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, borderRadius: 10, padding: "8px 12px", margin: "4px 0", animation: "fadeIn 0.5s ease", textAlign: "center" }}>
       <div style={{ color: cfg.color, fontFamily: "monospace", fontSize: 10, letterSpacing: 2, fontWeight: 700 }}>{cfg.icon} {cfg.label}</div>
       <div style={{ color: cfg.color, fontFamily: "monospace", fontSize: 16, fontWeight: 900, letterSpacing: 3, marginTop: 2 }}>{value}</div>
+    </div>
+  );
+}
+
+/* ============ SPY MAP ============ */
+function SpyMap({ locations, visited, city }) {
+  const LONDON_POINTS = [
+    { id: "bigben", label: "Big Ben", x: 38, y: 62 },
+    { id: "tower", label: "Tower of London", x: 72, y: 55 },
+    { id: "stpauls", label: "St. Paul's", x: 58, y: 48 },
+    { id: "buckingham", label: "Buckingham Palace", x: 30, y: 68 },
+    { id: "eye", label: "London Eye", x: 40, y: 58 },
+  ];
+  const PARIS_POINTS = [
+    { id: "louvre", label: "The Louvre", x: 52, y: 50 },
+    { id: "chapelle", label: "Sainte-Chapelle", x: 47, y: 55 },
+    { id: "sacrecoeur", label: "Sacré-Cœur", x: 53, y: 22 },
+    { id: "eiffel", label: "Eiffel Tower", x: 28, y: 52 },
+  ];
+  const pts = city === "london" ? LONDON_POINTS : PARIS_POINTS;
+  const londonRiver = "M 0,58 C 15,62 25,55 35,60 S 50,65 60,56 S 75,50 85,54 S 95,52 100,55";
+  const parisRiver = "M 0,48 C 15,52 25,58 38,56 S 50,52 58,54 S 70,58 80,52 S 90,48 100,50";
+  const river = city === "london" ? londonRiver : parisRiver;
+  return (
+    <div style={{ background: "#0d0d0d", border: "1px solid #222", borderRadius: 10, padding: 12, marginBottom: 16, position: "relative" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <span style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 10, letterSpacing: 2, fontWeight: 700 }}>FIELD MAP</span>
+        <span style={{ color: "#333", fontFamily: "monospace", fontSize: 8, letterSpacing: 1 }}>{city === "london" ? "51.5074° N, 0.1278° W" : "48.8566° N, 2.3522° E"}</span>
+      </div>
+      <svg viewBox="0 0 100 90" style={{ width: "100%", height: "auto" }}>
+        {[20,40,60,80].map(x => <line key={`gx${x}`} x1={x} y1={0} x2={x} y2={90} stroke="#151515" strokeWidth="0.3" />)}
+        {[20,40,60,80].map(y => <line key={`gy${y}`} x1={0} y1={y} x2={100} y2={y} stroke="#151515" strokeWidth="0.3" />)}
+        <path d={river} fill="none" stroke="#1a3a4a" strokeWidth="2.5" opacity="0.6" />
+        <path d={river} fill="none" stroke="#1e4d5e" strokeWidth="1" opacity="0.3" />
+        {pts.map(pt => {
+          const v = visited.includes(pt.id);
+          return (
+            <g key={pt.id}>
+              {v && <circle cx={pt.x} cy={pt.y} r="4" fill="none" stroke="#4ade80" strokeWidth="0.5" opacity="0.4">
+                <animate attributeName="r" from="3" to="7" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite" />
+              </circle>}
+              <circle cx={pt.x} cy={pt.y} r="2.5" fill={v ? "#4ade80" : "#333"} stroke={v ? "#4ade80" : "#444"} strokeWidth="0.5" />
+              {v && <circle cx={pt.x} cy={pt.y} r="1" fill="#fff" opacity="0.6" />}
+              <text x={pt.x} y={pt.y - 5} textAnchor="middle" fill={v ? "#4ade80" : "#555"} fontSize="3.2" fontFamily="monospace" fontWeight={v ? "700" : "400"} letterSpacing="0.3">
+                {pt.label.toUpperCase()}
+              </text>
+              {v && <text x={pt.x} y={pt.y + 6.5} textAnchor="middle" fill="#4ade80" fontSize="2" fontFamily="monospace" letterSpacing="0.5" opacity="0.7">
+                INVESTIGATED
+              </text>}
+            </g>
+          );
+        })}
+        <path d="M 2,2 L 8,2 M 2,2 L 2,8" stroke="#333" strokeWidth="0.4" fill="none" />
+        <path d="M 98,2 L 92,2 M 98,2 L 98,8" stroke="#333" strokeWidth="0.4" fill="none" />
+        <path d="M 2,88 L 8,88 M 2,88 L 2,82" stroke="#333" strokeWidth="0.4" fill="none" />
+        <path d="M 98,88 L 92,88 M 98,88 L 98,82" stroke="#333" strokeWidth="0.4" fill="none" />
+      </svg>
     </div>
   );
 }
@@ -396,6 +462,7 @@ function LondonDossier({ visited, wordClues, fragments }) {
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
+      <SpyMap locations={LOCS} visited={visited} city="london" />
       <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
         <ProgressBar label="LOCATIONS" current={visited.length} total={5} color="#4ade80" />
         <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
@@ -441,6 +508,7 @@ function ParisDossier({ parisVisited, fragments }) {
     <div style={{ height: "100%", overflowY: "auto", padding: 16 }}>
       <AgentCards />
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 13, fontWeight: 700, letterSpacing: 2, marginBottom: 10, textAlign: "center" }}>PARIS</div>
+      <SpyMap locations={PARIS_LOCS} visited={parisVisited} city="paris" />
       <div style={{ display: "flex", gap: 12, marginBottom: 18, padding: "10px 12px", background: "#111", borderRadius: 10, border: "1px solid #222" }}>
         <ProgressBar label="LOCATIONS" current={parisVisited.length} total={4} color="#4ade80" />
         <ProgressBar label="FRAGMENTS" current={fragCount} total={3} color="#3b82f6" />
@@ -558,7 +626,7 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
 
   const detectResp = (t) => {
     const l = t.toLowerCase();
-    const frag = (num, idx, label) => {
+    const frag = (num, idx) => {
       if (l.includes(num) && (l.includes("fragment") || l.includes("dossier") || l.includes("number"))) {
         setFragments(p => { if (p[idx] === num) return p; const n=[...p]; n[idx]=num; return n; });
         addBanner("fragment", num);
@@ -566,6 +634,10 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
     };
     frag("92", 0); frag("02", 1); frag("45", 2);
     frag("41", 3); frag("31", 4); frag("98", 5);
+    // Collector intercept detection
+    if (l.includes("collector") && (l.includes("intercepted") || l.includes("took this") || l.includes("step ahead") || l.includes("got here first"))) {
+      addBanner("collector", "\"I'm always a step ahead...\"");
+    }
     // Word clue: ANT
     if ((l.includes("ant") || l.includes("aunt")) && (l.includes("remember") || l.includes("word") || l.includes("strip") || l.includes("clue") || l.includes("dossier"))) {
       if (!wordClues.some(w => w.word === "ANT")) {
@@ -610,17 +682,6 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
     setLoading(false);
   };
 
-  // Interleave banners into messages by timestamp
-  const allItems = [];
-  let bIdx = 0;
-  msgs.forEach((m, mi) => {
-    allItems.push({ type: "msg", data: m, key: `m${mi}` });
-  });
-  // Append banners at end (they appear when earned)
-  banners.forEach((b, bi) => {
-    allItems.push({ type: "banner", data: b, key: `b${b.id}` });
-  });
-
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div ref={ref} style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
@@ -630,12 +691,10 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
               {m.image && <img src={m.image} alt="" style={{ width: "100%", maxWidth: 200, borderRadius: 10, marginBottom: 4 }} />}
               <div style={{ background: m.role === "user" ? "#1e3a5f" : "#1a1a1a", border: m.role === "user" ? "1px solid #2563eb" : "1px solid #333", borderRadius: 12, padding: "10px 12px", color: m.role === "user" ? "#93c5fd" : "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{m.text}</div>
             </div>
-            {/* Show banners that were earned right after this message */}
-            {m.banners && m.banners.map((b, bi) => <ChatBanner key={`b${i}-${bi}`} type={b.type} value={b.value} />)}
           </div>
         ))}
-        {/* Show pending banners */}
-        {banners.filter(b => b.pending).map(b => <ChatBanner key={b.id} type={b.type} value={b.value} />)}
+        {/* Show banners at bottom of chat */}
+        {banners.map(b => <ChatBanner key={b.id} type={b.type} value={b.value} />)}
         {loading && <div style={{ alignSelf: "flex-start" }}><div style={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 12, padding: "10px 12px" }}><span style={{ color: "#facc15", fontFamily: "monospace" }}>● ● ●</span></div></div>}
       </div>
       <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} style={{ display: "none" }} />
@@ -649,12 +708,13 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
   );
 }
 
-/* ============ TAB BAR ============ */
+/* ============ TAB BAR (color-coded stats) ============ */
 function TabBar({ view, setView, visited, wordClues, fragments, parisUnlocked, parisVisited }) {
   const londonFrags = fragments.slice(0,3).filter(f=>f).length;
   const parisFrags = fragments.slice(3,6).filter(f=>f).length;
-  const showPuzzle = wordClues.length >= 2;
-  const tb = (id, label, active, color, badge) => (
+  const showPuzzle = wordClues.length >= 4;
+
+  const tb = (id, label, color, badge) => (
     <button key={id} onClick={() => setView(id)} style={{
       flex: 1, padding: "8px 2px", background: view === id ? "#111" : "transparent", border: "none",
       borderBottom: view === id ? `2px solid ${color}` : "2px solid transparent",
@@ -662,16 +722,70 @@ function TabBar({ view, setView, visited, wordClues, fragments, parisUnlocked, p
       letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
     }}>
       <span>{label}</span>
-      {badge && <span style={{ fontSize: 7, color: "#888", letterSpacing: 0 }}>{badge}</span>}
+      {badge && <span style={{ fontSize: 7, letterSpacing: 0 }}>{badge}</span>}
     </button>
+  );
+
+  // Color-coded badge for London: green/blue/yellow
+  const londonBadge = (
+    <span style={{ fontSize: 7, letterSpacing: 0 }}>
+      <span style={{ color: "#4ade80" }}>{visited.length}/5</span>
+      {" · "}
+      <span style={{ color: "#3b82f6" }}>{londonFrags}/3</span>
+      {" · "}
+      <span style={{ color: "#facc15" }}>{wordClues.length}/4</span>
+    </span>
+  );
+  const parisBadge = (
+    <span style={{ fontSize: 7, letterSpacing: 0 }}>
+      <span style={{ color: "#4ade80" }}>{parisVisited.length}/4</span>
+      {" · "}
+      <span style={{ color: "#3b82f6" }}>{parisFrags}/3</span>
+    </span>
   );
 
   return (
     <div style={{ display: "flex", borderBottom: "1px solid #222", flexShrink: 0 }}>
-      {tb("chat", "🟢 TRU", true, "#4ade80", null)}
-      {tb("london", "LONDON", true, "#facc15", `${visited.length}/5 · ${londonFrags}/3 · ${wordClues.length}/4`)}
-      {showPuzzle && tb("puzzle", "⚠ PUZZLE", true, "#ef4444", parisUnlocked ? "SOLVED" : null)}
-      {parisUnlocked && tb("paris", "PARIS", true, "#f97316", `${parisVisited.length}/4 · ${parisFrags}/3`)}
+      <button onClick={() => setView("chat")} style={{
+        flex: 1, padding: "8px 2px", background: view === "chat" ? "#111" : "transparent", border: "none",
+        borderBottom: view === "chat" ? "2px solid #4ade80" : "2px solid transparent",
+        color: view === "chat" ? "#4ade80" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+        letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+      }}>
+        <span>🟢 TRU</span>
+      </button>
+      <button onClick={() => setView("london")} style={{
+        flex: 1, padding: "8px 2px", background: view === "london" ? "#111" : "transparent", border: "none",
+        borderBottom: view === "london" ? "2px solid #facc15" : "2px solid transparent",
+        color: view === "london" ? "#facc15" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+        letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+      }}>
+        <span>LONDON</span>
+        {londonBadge}
+      </button>
+      {showPuzzle && (
+        <button onClick={() => setView("puzzle")} style={{
+          flex: 1, padding: "8px 2px", background: view === "puzzle" ? "#111" : "transparent", border: "none",
+          borderBottom: view === "puzzle" ? "2px solid #ef4444" : "2px solid transparent",
+          color: view === "puzzle" ? "#ef4444" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+          letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+          animation: !parisUnlocked ? "pulse 1.5s infinite" : "none",
+        }}>
+          <span>⚠ PUZZLE</span>
+          {parisUnlocked && <span style={{ fontSize: 7, color: "#4ade80" }}>SOLVED</span>}
+        </button>
+      )}
+      {parisUnlocked && (
+        <button onClick={() => setView("paris")} style={{
+          flex: 1, padding: "8px 2px", background: view === "paris" ? "#111" : "transparent", border: "none",
+          borderBottom: view === "paris" ? "2px solid #f97316" : "2px solid transparent",
+          color: view === "paris" ? "#f97316" : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
+          letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+        }}>
+          <span>PARIS</span>
+          {parisBadge}
+        </button>
+      )}
     </div>
   );
 }
@@ -690,17 +804,17 @@ export default function Home() {
   const [msgs, setMsgs] = usePersist("oct_m", []);
   const [banners, setBanners] = usePersist("oct_bn", []);
   const [parisRevealDone, setParisRevealDone] = usePersist("oct_prd", false);
+  const [puzzleNudgeSent, setPuzzleNudgeSent] = usePersist("oct_pns", false);
 
-  // Auto-send puzzle nudge when all 4 word clues are collected
-  const prevWordCount = useRef(wordClues.length);
+  // Auto-send puzzle nudge when all 4 word clues are collected (only once)
   useEffect(() => {
-    if (wordClues.length >= 4 && prevWordCount.current < 4 && phase === "active") {
+    if (wordClues.length >= 4 && !puzzleNudgeSent && phase === "active") {
+      setPuzzleNudgeSent(true);
       setTimeout(() => {
         setMsgs(p => [...p, { role: "spy", text: "Agents — I've been studying these word clues. There's a pattern. Check the PUZZLE tab — try combining them. Sound them out.\n\n— Tru" }]);
       }, 2000);
     }
-    prevWordCount.current = wordClues.length;
-  }, [wordClues.length, phase]);
+  }, [wordClues.length, phase, puzzleNudgeSent]);
 
   // When puzzle is solved, trigger Paris reveal flow
   useEffect(() => {
@@ -720,7 +834,7 @@ export default function Home() {
     <Head><title>Operation Clocktower</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /></Head>
     <style jsx global>{`*{margin:0;padding:0;box-sizing:border-box}html,body,#__next{height:100%;background:#0a0a0a}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
   </>);
-  const wrap = c => <>{head}<div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>{c}</div></>;
+  const wrap = c => <>{head}<div style={{ height: "100vh", maxWidth: 430, margin: "0 auto", background: "#0a0a0a", display: "flex", flexDirection: "column", borderLeft: "1px solid #1a1a1a", borderRight: "1px solid #1a1a1a" }}>{c}</div></>;
 
   /* --- PHASES --- */
   if (phase === "passcode") return wrap(<IS rk="pass" title="OPERATION CLOCKTOWER" subtitle="SECURE CHANNEL" prompt="ENTER MISSION CODE" placeholder="Mission code..." buttonText="ACCESS" errMsg="Invalid mission code." onSubmit={v => { if (v.trim().toUpperCase() === MC) { setPhase("intro"); return true; } return false; }} />);
@@ -732,7 +846,8 @@ export default function Home() {
   if (phase === "vc") return wrap(
     <div onClick={() => setPhase("verify")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
       <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>✓ VERIFIED</div>
-      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Cade. Enjoy Mark Day next year.</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Cade.</div>
+      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, textAlign: "center", maxWidth: 300, marginTop: 8 }}>Enjoy Mark Day next year.</div>
       <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
     </div>
   );
@@ -740,8 +855,9 @@ export default function Home() {
   if (phase === "vm") return wrap(
     <div onClick={() => setPhase("briefing")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
       <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>✓ VERIFIED</div>
-      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Maggie. Keep working hard with Trish.</div>
-      <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 12 }}>Both agents confirmed.</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Maggie.</div>
+      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, textAlign: "center", maxWidth: 300, marginTop: 8 }}>Keep working hard with Trish.</div>
+      <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 16 }}>Both agents confirmed.</div>
       <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
     </div>
   );
@@ -770,8 +886,9 @@ export default function Home() {
   if (phase === "calok") return wrap(
     <div onClick={() => setPhase("codenames")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
       <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>✓ ALL AGENTS VERIFIED</div>
-      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Callum. Good job beating Areeb in cards.</div>
-      <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 12 }}>The team is complete.</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Callum.</div>
+      <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, textAlign: "center", maxWidth: 300, marginTop: 8 }}>Good job beating Areeb in cards.</div>
+      <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 16 }}>The team is complete.</div>
       <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
     </div>
   );
@@ -784,7 +901,7 @@ export default function Home() {
 
   /* --- ACTIVE (tabs) --- */
   if (phase === "active") return (<>{head}
-    <div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>
+    <div style={{ height: "100vh", maxWidth: 430, margin: "0 auto", background: "#0a0a0a", display: "flex", flexDirection: "column", borderLeft: "1px solid #1a1a1a", borderRight: "1px solid #1a1a1a" }}>
       <TabBar view={view} setView={setView} visited={visited} wordClues={wordClues} fragments={fragments} parisUnlocked={parisUnlocked} parisVisited={parisVisited} />
       <div style={{ flex: 1, overflow: "hidden" }}>
         {view === "chat" && <Chat visited={visited} setVisited={setVisited} wordClues={wordClues} setWordClues={setWordClues} fragments={fragments} setFragments={setFragments} msgs={msgs} setMsgs={setMsgs} parisVisited={parisVisited} setParisVisited={setParisVisited} parisUnlocked={parisUnlocked} banners={banners} setBanners={setBanners} />}
