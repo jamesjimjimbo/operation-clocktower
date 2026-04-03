@@ -27,12 +27,7 @@ function SpyMap({ visited, city }) {
       </svg>
     ),
     tower: (col) => (
-      <svg width="28" height="28" viewBox="0 0 28 28">
-        <rect x="5" y="10" width="18" height="12" rx="0.5" fill="none" stroke={col} strokeWidth="0.8"/>
-        <rect x="4" y="5" width="5" height="8" fill="none" stroke={col} strokeWidth="0.6"/>
-        <rect x="19" y="5" width="5" height="8" fill="none" stroke={col} strokeWidth="0.6"/>
-        <path d="M 11,22 L 11,16 Q 14,14 17,16 L 17,22" fill="none" stroke={col} strokeWidth="0.5"/>
-        <path d="M 4,5 L 4,3.5 Limport { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Head from "next/head";
 
 /* ============ CONSTANTS ============ */
