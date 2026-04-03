@@ -350,7 +350,7 @@ function HowtoLocs({ onDone }) {
     { t: "HOW THIS WORKS", s: "header" },{ t: "", s: "sp" },
     { t: "Act like tourists. Check out sites, eat good food, have fun.", s: "normal" },{ t: "", s: "sp" },
     { t: "But at landmarks — clocks, towers, churches — check in with me.", s: "normal" },{ t: "", s: "sp" },
-    { t: "Not every place will have a clue. Blend in. The Collector is watching.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Not every place will have a clue. Blend in.", s: "normal" },{ t: "", s: "sp" },
     { t: "Here are some places to check out:", s: "bold" },
   ];
   const [vis, setVis] = useState(0);
@@ -368,7 +368,7 @@ function HowtoLocs({ onDone }) {
         {td && <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 14 }}>
           {il.slice(0, rev).map(loc => (
             <div key={loc.id} style={{ background: "#111", border: "1px solid #333", borderRadius: 10, overflow: "hidden", animation: "fadeIn 0.4s ease" }}>
-              <div style={{ width: "100%", height: 80, overflow: "hidden", background: "#1a1a1a" }}><img src={loc.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>
+              <div style={{ width: "100%", height: 80, overflow: "hidden", background: "#1a1a1a" }}><img src={loc.img} alt="" style={{ width: "100%", height: 80, objectFit: "cover", display: "block" }} /></div>
               <div style={{ padding: "6px 8px" }}><div style={{ color: loc.color, fontFamily: "'Courier New', monospace", fontSize: 10, fontWeight: 700, letterSpacing: 1 }}>{loc.label}</div></div>
             </div>
           ))}
@@ -714,7 +714,8 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
     if (l.includes("collector") && (l.includes("intercepted") || l.includes("took this") || l.includes("step ahead") || l.includes("got here first"))) {
       pending.push({ type: "collector", value: "\"I'm always a step ahead...\"" });
     }
-    if ((l.includes("ant") || l.includes("aunt")) && (l.includes("remember") || l.includes("word") || l.includes("strip") || l.includes("clue") || l.includes("dossier"))) {
+    // Word clue: ANT — only from explicit "strip it down" or "word clue" + "ant" context
+    if (l.includes("ant") && (l.includes("strip") || (l.includes("word clue") && l.includes("ant")) || (l.includes("word is") && l.includes("ant")) || l.includes("ant is a word clue") || l.includes("ant. that's a word clue") || l.includes("the word ant"))) {
       if (!wordClues.some(w => w.word === "ANT")) {
         setWordClues(p => [...p, WORD_MAP.friend]);
         pending.push({ type: "word", value: "ANT" });
@@ -773,12 +774,12 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
       <div ref={ref} style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
         {msgs.map((m, i) => (
           <div key={`m${i}`}>
-            {/* Banners pinned above the message that earned them */}
-            {m.banners && m.banners.map((b, bi) => <ChatBanner key={`b${i}-${bi}`} type={b.type} value={b.value} />)}
             <div style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "85%", marginLeft: m.role === "user" ? "auto" : 0 }}>
               {m.image && <img src={m.image} alt="" style={{ width: "100%", maxWidth: 200, borderRadius: 10, marginBottom: 4 }} />}
               <div style={{ background: m.role === "user" ? "#1e3a5f" : "#1a1a1a", border: m.role === "user" ? "1px solid #2563eb" : "1px solid #333", borderRadius: 12, padding: "10px 12px", color: m.role === "user" ? "#93c5fd" : "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{m.text}</div>
             </div>
+            {/* Banners pinned below the message that earned them */}
+            {m.banners && m.banners.map((b, bi) => <ChatBanner key={`b${i}-${bi}`} type={b.type} value={b.value} />)}
           </div>
         ))}
         {loading && <div style={{ alignSelf: "flex-start" }}><div style={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 12, padding: "10px 12px" }}><span style={{ color: "#facc15", fontFamily: "monospace" }}>● ● ●</span></div></div>}
@@ -927,9 +928,9 @@ export default function Home() {
 
   if (phase === "codenames") return wrap(<CodenameReveal onDone={() => setPhase("active")} />);
 
-  /* --- PARIS REVEAL FLOW: collector taunt → paris splash → paris locations --- */
-  if (phase === "collectortaunt") return wrap(<CollectorTaunt onDone={() => setPhase("parisreveal")} />);
-  if (phase === "parisreveal") return wrap(<ParisReveal onDone={() => setPhase("parislocs")} />);
+  /* --- PARIS REVEAL FLOW: paris splash → collector taunt → paris locations --- */
+  if (phase === "parisreveal") return wrap(<ParisReveal onDone={() => setPhase("collectortaunt")} />);
+  if (phase === "collectortaunt") return wrap(<CollectorTaunt onDone={() => setPhase("parislocs")} />);
   if (phase === "parislocs") return wrap(<ParisLocsPreview onDone={() => { setParisRevealDone(true); setPhase("active"); setView("chat"); }} />);
 
   /* --- ACTIVE (tabs) --- */
