@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import Head from "next/head";
 
@@ -35,11 +34,10 @@ const WORD_MAP = {
 };
 const BRIEFING = [
   { id: "b1", lines: [
-    { t: "⚠ PRIORITY BRIEFING ⚠", s: "warning" },{ t: "OPERATION CLOCKTOWER", s: "header" },{ t: "", s: "sp" },
-    { t: "Over 100 years ago, a brilliant clockmaker named Émile Bellecourt built secret mechanisms into the great landmarks of the world.", s: "normal" },{ t: "", s: "sp" },
-    { t: "Hidden inside each is a fragment of a master code — a code that would guide someone to his secret treasure.", s: "normal" },{ t: "", s: "sp" },
-    { t: "For a century, no one knew.", s: "normal" },{ t: "", s: "sp" },
-    { t: "Now someone does.", s: "bold" },
+    { t: "\u26a0 PRIORITY BRIEFING \u26a0", s: "warning" },{ t: "OPERATION CLOCKTOWER", s: "header" },{ t: "", s: "sp" },
+    { t: "Over 100 years ago, a brilliant clockmaker named \u00c9mile Bellecourt built secret mechanisms into the great landmarks of the world.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Hidden inside each is a fragment of a master code \u2014 a code that would guide someone to his secret treasure.", s: "normal" },{ t: "", s: "sp" },
+    { t: "For a century, no one knew.", s: "normal" },{ t: "", s: "sp" },{ t: "Now someone does.", s: "bold" },
   ]},
   { id: "b1b", lines: [
     { t: "We've received a tip about where to find some of the fragments.", s: "normal" },{ t: "", s: "sp" },
@@ -48,29 +46,29 @@ const BRIEFING = [
   { id: "london", special: "london" },
   { id: "b3", lines: [
     { t: "YOUR TEAM", s: "header" },{ t: "", s: "sp" },
-    { t: "Your father — codename MOTHER — and your brother Callum are already en route to London.", s: "normal" },{ t: "", s: "sp" },
-    { t: "Your mom — codename MONTY — is with you now. She'll get you there.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Your father \u2014 codename MOTHER \u2014 and your brother Callum are already en route to London.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Your mom \u2014 codename MONTY \u2014 is with you now. She'll get you there.", s: "normal" },{ t: "", s: "sp" },
     { t: "The Collector uses adult operatives. They watch for spies in suits.", s: "normal" },{ t: "", s: "sp" },
     { t: "They don't watch for kids.", s: "bold" },
   ]},
   { id: "b4", lines: [
     { t: "YOUR ROLES", s: "header" },{ t: "", s: "sp" },
-    { t: "CADE — The Codebreaker", s: "role" },{ t: "The hardest clues are yours.", s: "roledesc" },{ t: "", s: "sp" },
-    { t: "MAGGIE — The Scout", s: "role" },{ t: "Notice what others miss.", s: "roledesc" },{ t: "", s: "sp" },
-    { t: "CALLUM — The Charm", s: "role" },{ t: "No one suspects him. That's his superpower.", s: "roledesc" },{ t: "", s: "sp" },
+    { t: "CADE \u2014 The Codebreaker", s: "role" },{ t: "The hardest clues are yours.", s: "roledesc" },{ t: "", s: "sp" },
+    { t: "MAGGIE \u2014 The Scout", s: "role" },{ t: "Notice what others miss.", s: "roledesc" },{ t: "", s: "sp" },
+    { t: "CALLUM \u2014 The Charm", s: "role" },{ t: "No one suspects him. That's his superpower.", s: "roledesc" },{ t: "", s: "sp" },
     { t: "Mother and Monty are your handlers.", s: "dim" },{ t: "The missions are yours.", s: "bold" },
   ]},
   { id: "howto", special: "howto" },
   { id: "b2", special: "collector" },
   { id: "b2b", lines: [
-    { t: "Oh no — the Collector, one of Umbra's best operatives, must have intercepted the same clue.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Oh no \u2014 the Collector, one of Umbra's best operatives, must have intercepted the same clue.", s: "normal" },{ t: "", s: "sp" },
     { t: "You have to get to London quickly to beat him!", s: "bold" },
   ]},
   { id: "b6", lines: [
     { t: "WHAT TO DO NOW", s: "header" },{ t: "", s: "sp" },
     { t: "1. Get to London.", s: "normal" },{ t: "2. When your whole team is together, come back to this site.", s: "normal" },{ t: "3. I'll verify Callum and start the mission.", s: "normal" },{ t: "", s: "sp" },
     { t: "The Collector is already looking.", s: "normal" },{ t: "You need to be faster.", s: "bold" },{ t: "", s: "sp" },
-    { t: "Good luck, agents. The clock is ticking.", s: "flash" },{ t: "", s: "sp" },{ t: "— Tru", s: "dim" },
+    { t: "Good luck, agents. The clock is ticking.", s: "flash" },{ t: "", s: "sp" },{ t: "\u2014 Tru", s: "dim" },
   ]},
 ];
 const STY = {
@@ -121,10 +119,10 @@ function TL({ text, style, onDone, skip }) {
   }, [skip]);
   if (style === "sp") return <div style={{ height: 14 }} />;
   if (d === null) return <div style={{ minHeight: 20 }} />;
-  return <div style={{ ...STY[style], fontFamily: "'Courier New', monospace" }}>{d}<span style={{ opacity: d.length < (text||"").length ? 1 : 0, color: "#facc15" }}>█</span></div>;
+  return <div style={{ ...STY[style], fontFamily: "'Courier New', monospace" }}>{d}<span style={{ opacity: d.length < (text||"").length ? 1 : 0, color: "#facc15" }}>{"\u2588"}</span></div>;
 }
 
-/* ============ TYPED SCREEN (with tap-to-skip) ============ */
+/* ============ TYPED SCREEN ============ */
 function TS({ lines, onDone, id, extra }) {
   const [vis, setVis] = useState(0);
   const [done, setDone] = useState(false);
@@ -150,7 +148,7 @@ function TS({ lines, onDone, id, extra }) {
       </div>
       <div style={{ padding: "14px 16px 20px", textAlign: "center" }}>
         <span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>
-          {done ? "TAP TO CONTINUE ▸" : "TAP TO SKIP ▸"}
+          {done ? "TAP TO CONTINUE \u25b8" : "TAP TO SKIP \u25b8"}
         </span>
       </div>
     </div>
@@ -176,99 +174,38 @@ function IS({ title, subtitle, prompt, placeholder, onSubmit, errMsg, buttonText
   );
 }
 
-/* ============ COLLECTOR REVEAL (dramatic) ============ */
+/* ============ COLLECTOR REVEAL ============ */
 function CollectorReveal({ onDone }) {
   const [phase, setPhase] = useState(0);
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase(1), 500),
-      setTimeout(() => setPhase(2), 2000),
-      setTimeout(() => setPhase(3), 3500),
-      setTimeout(() => setPhase(4), 5500),
-      setTimeout(() => setPhase(5), 8000),
-    ];
-    return () => timers.forEach(clearTimeout);
+    const t = [setTimeout(() => setPhase(1), 500), setTimeout(() => setPhase(2), 2000), setTimeout(() => setPhase(3), 3500), setTimeout(() => setPhase(4), 5500), setTimeout(() => setPhase(5), 8000)];
+    return () => t.forEach(clearTimeout);
   }, []);
   return (
     <div onClick={() => phase >= 5 && onDone()} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: phase >= 5 ? "pointer" : "default", userSelect: "none", position: "relative", overflow: "hidden" }}>
-      {(phase >= 1 && phase < 3) && (
-        <div style={{ position: "absolute", inset: 0, background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(239,68,68,0.03) 2px, rgba(239,68,68,0.03) 4px)", animation: "fadeIn 0.3s ease", zIndex: 2 }} />
-      )}
-      {phase >= 1 && (
-        <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, letterSpacing: 4, marginBottom: 16, animation: "pulse 0.5s infinite", zIndex: 3 }}>
-          ⚠ SIGNAL INTERCEPTED ⚠
-        </div>
-      )}
-      {phase >= 2 && (
-        <div style={{ animation: "fadeIn 0.8s ease", zIndex: 3 }}>
-          <img src={`${IMG}/Collector.png`} alt="" style={{ width: 100, height: 100, borderRadius: 16, border: "2px solid #ef4444", boxShadow: "0 0 30px rgba(239,68,68,0.3)" }} />
-        </div>
-      )}
-      {phase >= 3 && (
-        <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}>
-          <div style={{ color: "#ef4444", fontFamily: "'Courier New', monospace", fontSize: 22, fontWeight: 900, letterSpacing: 5, marginBottom: 12 }}>THE COLLECTOR</div>
-          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>
-            "You're not alone on this, City Spies... I'm hunting these same fragments for Umbra."
-          </div>
-        </div>
-      )}
-      {phase >= 4 && (
-        <div style={{ marginTop: 12, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}>
-          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>
-            "Good luck beating me to them... I'll always be a step ahead of you."
-          </div>
-        </div>
-      )}
-      {phase >= 5 && (
-        <div style={{ marginTop: 24, zIndex: 3 }}>
-          <span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span>
-        </div>
-      )}
+      {(phase >= 1 && phase < 3) && <div style={{ position: "absolute", inset: 0, background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(239,68,68,0.03) 2px, rgba(239,68,68,0.03) 4px)", animation: "fadeIn 0.3s ease", zIndex: 2 }} />}
+      {phase >= 1 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, letterSpacing: 4, marginBottom: 16, animation: "pulse 0.5s infinite", zIndex: 3 }}>{"\u26a0"} SIGNAL INTERCEPTED {"\u26a0"}</div>}
+      {phase >= 2 && <div style={{ animation: "fadeIn 0.8s ease", zIndex: 3 }}><img src={`${IMG}/Collector.png`} alt="" style={{ width: 100, height: 100, borderRadius: 16, border: "2px solid #ef4444", boxShadow: "0 0 30px rgba(239,68,68,0.3)" }} /></div>}
+      {phase >= 3 && <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}><div style={{ color: "#ef4444", fontFamily: "'Courier New', monospace", fontSize: 22, fontWeight: 900, letterSpacing: 5, marginBottom: 12 }}>THE COLLECTOR</div><div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>"You're not alone on this, City Spies... I'm hunting these same fragments for Umbra."</div></div>}
+      {phase >= 4 && <div style={{ marginTop: 12, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}><div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.7, fontStyle: "italic" }}>"Good luck beating me to them... I'll always be a step ahead of you."</div></div>}
+      {phase >= 5 && <div style={{ marginTop: 24, zIndex: 3 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>}
     </div>
   );
 }
 
-/* ============ COLLECTOR TAUNT (after puzzle solved) ============ */
+/* ============ COLLECTOR TAUNT ============ */
 function CollectorTaunt({ onDone }) {
   const [phase, setPhase] = useState(0);
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase(1), 400),
-      setTimeout(() => setPhase(2), 1500),
-      setTimeout(() => setPhase(3), 4000),
-    ];
-    return () => timers.forEach(clearTimeout);
+    const t = [setTimeout(() => setPhase(1), 400), setTimeout(() => setPhase(2), 1500), setTimeout(() => setPhase(3), 4000)];
+    return () => t.forEach(clearTimeout);
   }, []);
   return (
     <div onClick={() => phase >= 3 && onDone()} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: phase >= 3 ? "pointer" : "default", userSelect: "none", position: "relative", overflow: "hidden" }}>
-      {phase >= 1 && (
-        <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, letterSpacing: 4, marginBottom: 16, animation: "pulse 0.5s infinite", zIndex: 3 }}>
-          ⚠ SIGNAL INTERCEPTED ⚠
-        </div>
-      )}
-      {phase >= 1 && (
-        <div style={{ animation: "fadeIn 0.8s ease", zIndex: 3 }}>
-          <img src={`${IMG}/Collector.png`} alt="" style={{ width: 80, height: 80, borderRadius: 14, border: "2px solid #ef4444", boxShadow: "0 0 20px rgba(239,68,68,0.3)" }} />
-        </div>
-      )}
-      {phase >= 2 && (
-        <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}>
-          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic" }}>
-            "Oh, you finally solved the London clues? I'm already a step ahead of you, eating all the chocolate croissants so you don't get any."
-          </div>
-          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic", marginTop: 10 }}>
-            "(Oh, and solving the puzzles too.)"
-          </div>
-          <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic", marginTop: 10 }}>
-            "You'll never beat me to the treasure..."
-          </div>
-        </div>
-      )}
-      {phase >= 3 && (
-        <div style={{ marginTop: 24, zIndex: 3 }}>
-          <span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span>
-        </div>
-      )}
+      {phase >= 1 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, letterSpacing: 4, marginBottom: 16, animation: "pulse 0.5s infinite", zIndex: 3 }}>{"\u26a0"} SIGNAL INTERCEPTED {"\u26a0"}</div>}
+      {phase >= 1 && <div style={{ animation: "fadeIn 0.8s ease", zIndex: 3 }}><img src={`${IMG}/Collector.png`} alt="" style={{ width: 80, height: 80, borderRadius: 14, border: "2px solid #ef4444", boxShadow: "0 0 20px rgba(239,68,68,0.3)" }} /></div>}
+      {phase >= 2 && <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 0.6s ease", zIndex: 3, maxWidth: 300 }}><div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic" }}>"Oh, you finally solved the London clues? I'm already a step ahead of you, eating all the chocolate croissants so you don't get any."</div><div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic", marginTop: 10 }}>"(Oh, and solving the puzzles too.)"</div><div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 13, lineHeight: 1.8, fontStyle: "italic", marginTop: 10 }}>"You'll never beat me to the treasure..."</div></div>}
+      {phase >= 3 && <div style={{ marginTop: 24, zIndex: 3 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>}
     </div>
   );
 }
@@ -280,10 +217,7 @@ function LondonReveal({ onDone }) {
   return (
     <div onClick={() => s && onDone()} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: s ? "pointer" : "default", userSelect: "none", position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}><img src={`${IMG}/london.jpg`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }} /></div>
-      {s && <>
-        <div style={{ position: "relative", zIndex: 1, color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 10, textShadow: "0 0 40px rgba(250,204,21,0.4)", animation: "fadeIn 1s ease" }}>LONDON</div>
-        <div style={{ position: "relative", zIndex: 1, marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
-      </>}
+      {s && <><div style={{ position: "relative", zIndex: 1, color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 10, textShadow: "0 0 40px rgba(250,204,21,0.4)", animation: "fadeIn 1s ease" }}>LONDON</div><div style={{ position: "relative", zIndex: 1, marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div></>}
     </div>
   );
 }
@@ -294,11 +228,8 @@ function ParisReveal({ onDone }) {
   useEffect(() => { setTimeout(() => setS(true), 400); }, []);
   return (
     <div onClick={() => s && onDone()} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: s ? "pointer" : "default", userSelect: "none", position: "relative" }}>
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}><img src={`${IMG}/paris.jpg`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }} onError={e => { e.target.style.background = "#111"; }} /></div>
-      {s && <>
-        <div style={{ position: "relative", zIndex: 1, color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 10, textShadow: "0 0 40px rgba(250,204,21,0.4)", animation: "fadeIn 1s ease" }}>PARIS</div>
-        <div style={{ position: "relative", zIndex: 1, marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
-      </>}
+      <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}><img src={`${IMG}/paris.webp`} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }} onError={e => { e.target.style.background = "#111"; }} /></div>
+      {s && <><div style={{ position: "relative", zIndex: 1, color: "#fff", fontFamily: "'Courier New', monospace", fontSize: 48, fontWeight: 900, letterSpacing: 10, textShadow: "0 0 40px rgba(250,204,21,0.4)", animation: "fadeIn 1s ease" }}>PARIS</div><div style={{ position: "relative", zIndex: 1, marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div></>}
     </div>
   );
 }
@@ -310,7 +241,7 @@ function ParisLocsPreview({ onDone }) {
   const [ad, setAd] = useState(false);
   const lines = [
     { t: "YOU MUST GO TO PARIS NOW!", s: "header" },{ t: "", s: "sp" },
-    { t: "Take the Eurostar to Paris. Same rules — act like tourists, check in at landmarks.", s: "normal" },{ t: "", s: "sp" },
+    { t: "Take the Eurostar to Paris. Same rules \u2014 act like tourists, check in at landmarks.", s: "normal" },{ t: "", s: "sp" },
     { t: "The Collector is already on his way. You need to beat him there.", s: "normal" },{ t: "", s: "sp" },
     { t: "Here are some places to investigate:", s: "bold" },
   ];
@@ -329,15 +260,14 @@ function ParisLocsPreview({ onDone }) {
           {PARIS_LOCS.slice(0, rev).map(loc => (
             <div key={loc.id} style={{ background: "#111", border: "1px solid #333", borderRadius: 10, overflow: "hidden", animation: "fadeIn 0.4s ease" }}>
               <div style={{ width: "100%", height: 80, overflow: "hidden", background: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {loc.img ? <img src={loc.img} alt="" style={{ width: "100%", height: 80, objectFit: "cover", display: "block" }} /> :
-                  <span style={{ color: "#333", fontFamily: "monospace", fontSize: 24 }}>?</span>}
+                {loc.img ? <img src={loc.img} alt="" style={{ width: "100%", height: 80, objectFit: "cover", display: "block" }} /> : <span style={{ color: "#333", fontFamily: "monospace", fontSize: 24 }}>?</span>}
               </div>
               <div style={{ padding: "6px 8px" }}><div style={{ color: loc.color, fontFamily: "'Courier New', monospace", fontSize: 10, fontWeight: 700, letterSpacing: 1 }}>{loc.label}</div></div>
             </div>
           ))}
         </div>}
       </div>
-      {ad && <div style={{ padding: "14px 16px 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO BEGIN PARIS MISSION ▸</span></div>}
+      {ad && <div style={{ padding: "14px 16px 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO BEGIN PARIS MISSION {"\u25b8"}</span></div>}
     </div>
   );
 }
@@ -350,7 +280,7 @@ function HowtoLocs({ onDone }) {
   const lines = [
     { t: "HOW THIS WORKS", s: "header" },{ t: "", s: "sp" },
     { t: "Act like tourists. Check out sites, eat good food, have fun.", s: "normal" },{ t: "", s: "sp" },
-    { t: "But at landmarks — clocks, towers, churches — check in with me.", s: "normal" },{ t: "", s: "sp" },
+    { t: "But at landmarks \u2014 clocks, towers, churches \u2014 check in with me.", s: "normal" },{ t: "", s: "sp" },
     { t: "Not every place will have a clue. Blend in.", s: "normal" },{ t: "", s: "sp" },
     { t: "Here are some places to check out:", s: "bold" },
   ];
@@ -375,7 +305,7 @@ function HowtoLocs({ onDone }) {
           ))}
         </div>}
       </div>
-      {ad && <div style={{ padding: "14px 16px 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>}
+      {ad && <div style={{ padding: "14px 16px 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>}
     </div>
   );
 }
@@ -396,11 +326,11 @@ function CodenameReveal({ onDone }) {
           <div>
             <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 12, marginBottom: 2 }}>{a.name}</div>
             <div style={{ color: "#fff", fontFamily: "monospace", fontSize: 17, fontWeight: 900, letterSpacing: 3 }}>{a.code}</div>
-            <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11 }}>{a.role} — {a.desc}</div>
+            <div style={{ color: "#888", fontFamily: "monospace", fontSize: 11 }}>{a.role} {"\u2014"} {a.desc}</div>
           </div>
         </div>
       ))}
-      {done && <div style={{ padding: "14px 0 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO BEGIN MISSION ▸</span></div>}
+      {done && <div style={{ padding: "14px 0 20px", textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO BEGIN MISSION {"\u25b8"}</span></div>}
     </div>
   );
 }
@@ -420,7 +350,7 @@ function AgentCards() {
   );
 }
 
-/* ============ PROGRESS TRACKERS ============ */
+/* ============ PROGRESS BAR ============ */
 function ProgressBar({ label, current, total, color }) {
   return (
     <div style={{ flex: 1 }}>
@@ -435,13 +365,13 @@ function ProgressBar({ label, current, total, color }) {
   );
 }
 
-/* ============ IN-CHAT BANNER ============ */
+/* ============ CHAT BANNER ============ */
 function ChatBanner({ type, value }) {
   const cfg = {
-    location: { bg: "#0a2e1a", border: "#4ade80", color: "#4ade80", icon: "📍", label: "NEW LOCATION" },
-    fragment: { bg: "#0a1a2e", border: "#3b82f6", color: "#3b82f6", icon: "🔢", label: "FRAGMENT ACQUIRED" },
-    word: { bg: "#2e2a0a", border: "#facc15", color: "#facc15", icon: "🔤", label: "WORD CLUE" },
-    collector: { bg: "#2e0a0a", border: "#ef4444", color: "#ef4444", icon: "⚠", label: "INTERCEPTED BY THE COLLECTOR" },
+    location: { bg: "#0a2e1a", border: "#4ade80", color: "#4ade80", icon: "\ud83d\udccd", label: "NEW LOCATION" },
+    fragment: { bg: "#0a1a2e", border: "#3b82f6", color: "#3b82f6", icon: "\ud83d\udd22", label: "FRAGMENT ACQUIRED" },
+    word: { bg: "#2e2a0a", border: "#facc15", color: "#facc15", icon: "\ud83d\udd24", label: "WORD CLUE" },
+    collector: { bg: "#2e0a0a", border: "#ef4444", color: "#ef4444", icon: "\u26a0", label: "INTERCEPTED BY THE COLLECTOR" },
   }[type] || {};
   return (
     <div style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, borderRadius: 10, padding: "8px 12px", margin: "4px 0", animation: "fadeIn 0.5s ease", textAlign: "center" }}>
@@ -454,50 +384,41 @@ function ChatBanner({ type, value }) {
 /* ============ SPY MAP ============ */
 function SpyMap({ visited, city }) {
   const LONDON_PINS = [
-    { id: "buckingham", label: "Buckingham", x: 22, y: 52 },
-    { id: "bigben", label: "Big Ben", x: 35, y: 50 },
-    { id: "eye", label: "London Eye", x: 43, y: 45 },
-    { id: "stpauls", label: "St. Paul's", x: 58, y: 25 },
-    { id: "tower", label: "Tower", x: 78, y: 35 },
+    { id: "buckingham", label: "BUCKINGHAM", x: 22, y: 52 },
+    { id: "bigben", label: "BIG BEN", x: 35, y: 50 },
+    { id: "eye", label: "LONDON EYE", x: 43, y: 45 },
+    { id: "stpauls", label: "ST. PAUL'S", x: 58, y: 25 },
+    { id: "tower", label: "TOWER", x: 78, y: 35 },
   ];
   const PARIS_PINS = [
-    { id: "arcdetriomphe", label: "Arc de Triomphe", x: 18, y: 18 },
-    { id: "eiffel", label: "Eiffel Tower", x: 22, y: 42 },
-    { id: "louvre", label: "Louvre", x: 42, y: 38 },
-    { id: "chapelle", label: "Ste-Chapelle", x: 48, y: 50 },
+    { id: "arcdetriomphe", label: "ARC DE TRIOMPHE", x: 18, y: 18 },
+    { id: "eiffel", label: "EIFFEL TOWER", x: 22, y: 42 },
+    { id: "louvre", label: "LOUVRE", x: 42, y: 38 },
+    { id: "chapelle", label: "STE-CHAPELLE", x: 48, y: 50 },
   ];
   const pins = city === "london" ? LONDON_PINS : PARIS_PINS;
-  const mapImg = city === "london" ? `${IMG}/London-map.png` : `${IMG}/Paris-map.png`;
-
+  const mapImg = city === "london" ? `${IMG}/London-map.png` : `${IMG}/paris-map-clean.png`;
   return (
-    <div style={{ borderRadius: 10, overflow: "hidden", marginBottom: 14, border: "1px solid #222" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 10px", background: "#0d0d0d" }}>
-        <span style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 9, letterSpacing: 2, fontWeight: 700 }}>FIELD MAP</span>
-        <span style={{ color: "#333", fontFamily: "monospace", fontSize: 7, letterSpacing: 1 }}>{city === "london" ? "51.5074° N" : "48.8566° N"}</span>
+    <div style={{ borderRadius: 8, overflow: "hidden", marginBottom: 14, border: "1px solid #222" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 8px", background: "#0d0d0d" }}>
+        <span style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 8, letterSpacing: 2, fontWeight: 700 }}>FIELD MAP</span>
+        <span style={{ color: "#333", fontFamily: "monospace", fontSize: 6, letterSpacing: 1 }}>{city === "london" ? "51.5074\u00b0 N" : "48.8566\u00b0 N"}</span>
       </div>
-      <div style={{ position: "relative", width: "100%", paddingBottom: "70%", background: "#1a1c1a" }}>
+      <div style={{ position: "relative", width: "100%", paddingBottom: "55%", background: "#0d0d0d" }}>
         <img src={mapImg} alt="" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }} />
         {pins.map(pin => {
           const v = visited.includes(pin.id);
+          const col = v ? "#4ade80" : "#555";
           return (
-            <div key={pin.id} style={{ position: "absolute", left: `${pin.x}%`, top: `${pin.y}%`, transform: "translate(-50%, -100%)", display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none" }}>
-              {/* Label pill */}
-              <div style={{
-                background: v ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.5)",
-                border: v ? "1px solid #4ade80" : "1px solid #555",
-                borderRadius: 4, padding: "2px 6px", marginBottom: 2, whiteSpace: "nowrap",
-              }}>
-                <span style={{ color: v ? "#4ade80" : "#888", fontFamily: "monospace", fontSize: 8, fontWeight: 700, letterSpacing: 0.5 }}>{pin.label}</span>
-              </div>
-              {/* Pin marker */}
+            <div key={pin.id} style={{ position: "absolute", left: `${pin.x}%`, top: `${pin.y}%`, transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", pointerEvents: "none" }}>
+              {v && <div style={{ position: "absolute", width: 50, height: 50, borderRadius: "50%", border: "1px solid #4ade80", opacity: 0.15, animation: "pulse 2s infinite", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />}
               <svg width="16" height="20" viewBox="0 0 16 20">
-                {v && <circle cx="8" cy="8" r="8" fill="#4ade80" opacity="0.2">
-                  <animate attributeName="r" from="6" to="12" dur="2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" from="0.3" to="0" dur="2s" repeatCount="indefinite" />
-                </circle>}
-                <path d="M 8 0 C 3.6 0 0 3.6 0 8 C 0 12.4 8 20 8 20 S 16 12.4 16 8 C 16 3.6 12.4 0 8 0 Z" fill={v ? "#4ade80" : "#555"} />
+                <path d="M 8 0 C 3.6 0 0 3.6 0 8 C 0 12.4 8 20 8 20 S 16 12.4 16 8 C 16 3.6 12.4 0 8 0 Z" fill={col} />
                 <circle cx="8" cy="8" r="3" fill={v ? "#fff" : "#333"} />
               </svg>
+              <div style={{ marginTop: 1 }}>
+                <span style={{ color: col, fontFamily: "monospace", fontSize: 6, fontWeight: 700, letterSpacing: 0.3 }}>{pin.label}</span>
+              </div>
             </div>
           );
         })}
@@ -586,7 +507,7 @@ function ParisDossier({ parisVisited, fragments }) {
   );
 }
 
-/* ============ PUZZLE (with linger) ============ */
+/* ============ PUZZLE ============ */
 function Puzzle({ wordClues, onSolved, parisUnlocked }) {
   const [i1, setI1] = useState(""); const [i2, setI2] = useState("");
   const [s1, setS1] = useState(false); const [s2, setS2] = useState(false);
@@ -601,7 +522,7 @@ function Puzzle({ wordClues, onSolved, parisUnlocked }) {
   return (
     <div onClick={() => linger && onSolved()} style={{ height: "100%", padding: 20, overflowY: "auto", cursor: linger ? "pointer" : "default" }}>
       <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2, marginBottom: 8 }}>PATTERN DETECTED</div>
-      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, marginBottom: 18 }}>I've been analyzing your word clues. Try combining them — sound them out together.</div>
+      <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, marginBottom: 18 }}>I've been analyzing your word clues. Try combining them {"\u2014"} sound them out together.</div>
       {p1 && (
         <div style={{ background: "#111", border: s1 ? "1px solid #4ade80" : e1 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 10, padding: 14, marginBottom: 12 }}>
           <div style={{ display: "flex", gap: 8, marginBottom: 10, justifyContent: "center" }}>
@@ -609,14 +530,10 @@ function Puzzle({ wordClues, onSolved, parisUnlocked }) {
             <span style={{ color: "#555", fontSize: 15, alignSelf: "center" }}>+</span>
             <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>ANT</span>
           </div>
-          {!s1 ? (<>
-            <div style={{ display: "flex", gap: 8 }}>
-              <input value={i1} onChange={e => { setI1(e.target.value); setE1(false); }} onKeyDown={e => e.key === "Enter" && c1()} placeholder="Sound it out..."
-                style={{ flex: 1, background: "#0a0a0a", border: e1 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
-              <button onClick={c1} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
-            </div>
-            {e1 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 6, textAlign: "center" }}>Not quite. Try sounding it out again.</div>}
-          </>) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>✓ CROISSANT</div>}
+          {!s1 ? (<><div style={{ display: "flex", gap: 8 }}>
+            <input value={i1} onChange={e => { setI1(e.target.value); setE1(false); }} onKeyDown={e => e.key === "Enter" && c1()} placeholder="Sound it out..." style={{ flex: 1, background: "#0a0a0a", border: e1 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
+            <button onClick={c1} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
+          </div>{e1 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 6, textAlign: "center" }}>Not quite. Try sounding it out again.</div>}</>) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} CROISSANT</div>}
         </div>
       )}
       {p2 && (
@@ -626,56 +543,26 @@ function Puzzle({ wordClues, onSolved, parisUnlocked }) {
             <span style={{ color: "#555", fontSize: 15, alignSelf: "center" }}>+</span>
             <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>FELL</span>
           </div>
-          {!s2 ? (<>
-            <div style={{ display: "flex", gap: 8 }}>
-              <input value={i2} onChange={e => { setI2(e.target.value); setE2(false); }} onKeyDown={e => e.key === "Enter" && c2()} placeholder="Sound it out..."
-                style={{ flex: 1, background: "#0a0a0a", border: e2 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
-              <button onClick={c2} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
-            </div>
-            {e2 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 6, textAlign: "center" }}>Not quite. Try sounding it out again.</div>}
-          </>) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>✓ EIFFEL</div>}
+          {!s2 ? (<><div style={{ display: "flex", gap: 8 }}>
+            <input value={i2} onChange={e => { setI2(e.target.value); setE2(false); }} onKeyDown={e => e.key === "Enter" && c2()} placeholder="Sound it out..." style={{ flex: 1, background: "#0a0a0a", border: e2 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
+            <button onClick={c2} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "9px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12, cursor: "pointer", flexShrink: 0 }}>SOLVE</button>
+          </div>{e2 && <div style={{ color: "#ef4444", fontFamily: "monospace", fontSize: 11, marginTop: 6, textAlign: "center" }}>Not quite. Try sounding it out again.</div>}</>) : <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 17, fontWeight: 700, textAlign: "center", letterSpacing: 3 }}>{"\u2713"} EIFFEL</div>}
         </div>
       )}
-      {ad && (
-        <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 1s ease" }}>
-          <div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>THOSE ARE FRENCH.</div>
-          <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6 }}>Bellecourt must also have hidden codes in another city...</div>
-        </div>
-      )}
-      {linger && (
-        <div style={{ marginTop: 20, textAlign: "center" }}>
-          <span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span>
-        </div>
-      )}
-      {parisUnlocked && (
-        <div style={{ marginTop: 16, textAlign: "center" }}>
-          <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2 }}>✓ PUZZLE SOLVED</div>
-          <div style={{ color: "#fff", fontFamily: "monospace", fontSize: 36, fontWeight: 900, letterSpacing: 8, marginTop: 8, textShadow: "0 0 30px rgba(250,204,21,0.3)" }}>PARIS</div>
-        </div>
-      )}
+      {ad && <div style={{ marginTop: 16, textAlign: "center", animation: "fadeIn 1s ease" }}><div style={{ color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700, letterSpacing: 3, marginBottom: 8 }}>THOSE ARE FRENCH.</div><div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6 }}>Bellecourt must also have hidden codes in another city...</div></div>}
+      {linger && <div style={{ marginTop: 20, textAlign: "center" }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>}
+      {parisUnlocked && <div style={{ marginTop: 16, textAlign: "center" }}><div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 14, fontWeight: 700, letterSpacing: 2 }}>{"\u2713"} PUZZLE SOLVED</div><div style={{ color: "#fff", fontFamily: "monospace", fontSize: 36, fontWeight: 900, letterSpacing: 8, marginTop: 8, textShadow: "0 0 30px rgba(250,204,21,0.3)" }}>PARIS</div></div>}
     </div>
   );
 }
 
 /* ============ CHAT ============ */
-function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFragments, msgs, setMsgs, parisVisited, setParisVisited, parisUnlocked, setBannerQueue }) {
+function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFragments, msgs, setMsgs, parisVisited, setParisVisited, parisUnlocked }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
   const fileRef = useRef(null);
   useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight; }, [msgs, loading]);
-
-  // Banners are stored inline in messages as msg.banners = [{type, value}]
-  const addBannersToLastMsg = (bannerList) => {
-    if (bannerList.length === 0) return;
-    setMsgs(p => {
-      const n = [...p];
-      const last = { ...n[n.length - 1] };
-      last.banners = [...(last.banners || []), ...bannerList];
-      n[n.length - 1] = last;
-      return n;
-    });
-  };
 
   const detectLoc = (t) => {
     const l = t.toLowerCase();
@@ -703,17 +590,12 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
         pending.push({ type: "fragment", value: num });
       }
     };
-    frag("92", 0); frag("02", 1); frag("45", 2);
-    frag("41", 3); frag("31", 4); frag("98", 5);
+    frag("92", 0); frag("02", 1); frag("45", 2); frag("41", 3); frag("31", 4); frag("98", 5);
     if (l.includes("collector") && (l.includes("intercepted") || l.includes("took this") || l.includes("step ahead") || l.includes("got here first"))) {
       pending.push({ type: "collector", value: "\"I'm always a step ahead...\"" });
     }
-    // Word clue: ANT — only from explicit "strip it down" or "word clue" + "ant" context
     if (l.includes("ant") && (l.includes("strip") || (l.includes("word clue") && l.includes("ant")) || (l.includes("word is") && l.includes("ant")) || l.includes("ant is a word clue") || l.includes("ant. that's a word clue") || l.includes("the word ant"))) {
-      if (!wordClues.some(w => w.word === "ANT")) {
-        setWordClues(p => [...p, WORD_MAP.friend]);
-        pending.push({ type: "word", value: "ANT" });
-      }
+      if (!wordClues.some(w => w.word === "ANT")) { setWordClues(p => [...p, WORD_MAP.friend]); pending.push({ type: "word", value: "ANT" }); }
     }
     if (l.includes("word clue") || l.includes("word is")) {
       if (l.includes("cross") && !wordClues.some(w => w.word === "CROSS")) pending.push({ type: "word", value: "CROSS" });
@@ -732,13 +614,10 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
       setMsgs(nm); setLoading(true);
       fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: nm.map(m => ({ role: m.role === "spy" ? "assistant" : "user", content: m.text })) }) })
         .then(r => r.json()).then(d => {
-          if (d.text) {
-            const respBanners = detectResp(d.text);
-            const newMsg = { role: "spy", text: d.text, banners: respBanners.length > 0 ? respBanners : undefined };
-            setMsgs(p => [...p, newMsg]);
-          } else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. — Tru" }]);
+          if (d.text) { const rb = detectResp(d.text); setMsgs(p => [...p, { role: "spy", text: d.text, banners: rb.length > 0 ? rb : undefined }]); }
+          else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. \u2014 Tru" }]);
         })
-        .catch(() => setMsgs(p => [...p, { role: "spy", text: "Channel disrupted. Try again. — Tru" }]))
+        .catch(() => setMsgs(p => [...p, { role: "spy", text: "Channel disrupted. Try again. \u2014 Tru" }]))
         .finally(() => setLoading(false));
     };
     reader.readAsDataURL(file); e.target.value = "";
@@ -747,19 +626,16 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
   const send = async () => {
     if (!input.trim() || loading) return;
     const msg = input.trim(); setInput("");
-    const locBanners = detectLoc(msg);
-    const userMsg = { role: "user", text: msg, banners: locBanners.length > 0 ? locBanners : undefined };
-    const nm = [...msgs, userMsg];
+    const lb = detectLoc(msg);
+    const um = { role: "user", text: msg, banners: lb.length > 0 ? lb : undefined };
+    const nm = [...msgs, um];
     setMsgs(nm); setLoading(true);
     try {
       const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: nm.map(m => ({ role: m.role === "spy" ? "assistant" : "user", content: m.text })) }) });
       const d = await r.json();
-      if (d.text) {
-        const respBanners = detectResp(d.text);
-        const newMsg = { role: "spy", text: d.text, banners: respBanners.length > 0 ? respBanners : undefined };
-        setMsgs(p => [...p, newMsg]);
-      } else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. — Tru" }]);
-    } catch { setMsgs(p => [...p, { role: "spy", text: "Channel disrupted. Try again. — Tru" }]); }
+      if (d.text) { const rb = detectResp(d.text); setMsgs(p => [...p, { role: "spy", text: d.text, banners: rb.length > 0 ? rb : undefined }]); }
+      else setMsgs(p => [...p, { role: "spy", text: "Signal interference. Try again. \u2014 Tru" }]);
+    } catch { setMsgs(p => [...p, { role: "spy", text: "Channel disrupted. Try again. \u2014 Tru" }]); }
     setLoading(false);
   };
 
@@ -772,15 +648,14 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
               {m.image && <img src={m.image} alt="" style={{ width: "100%", maxWidth: 200, borderRadius: 10, marginBottom: 4 }} />}
               <div style={{ background: m.role === "user" ? "#1e3a5f" : "#1a1a1a", border: m.role === "user" ? "1px solid #2563eb" : "1px solid #333", borderRadius: 12, padding: "10px 12px", color: m.role === "user" ? "#93c5fd" : "#c8c8c8", fontFamily: "monospace", fontSize: 13, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{m.text}</div>
             </div>
-            {/* Banners pinned below the message that earned them */}
             {m.banners && m.banners.map((b, bi) => <ChatBanner key={`b${i}-${bi}`} type={b.type} value={b.value} />)}
           </div>
         ))}
-        {loading && <div style={{ alignSelf: "flex-start" }}><div style={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 12, padding: "10px 12px" }}><span style={{ color: "#facc15", fontFamily: "monospace" }}>● ● ●</span></div></div>}
+        {loading && <div style={{ alignSelf: "flex-start" }}><div style={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 12, padding: "10px 12px" }}><span style={{ color: "#facc15", fontFamily: "monospace" }}>{"\u25cf"} {"\u25cf"} {"\u25cf"}</span></div></div>}
       </div>
       <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} style={{ display: "none" }} />
       <div style={{ padding: "10px 14px", borderTop: "1px solid #222", display: "flex", gap: 8 }}>
-        <button onClick={() => fileRef.current?.click()} style={{ background: "#222", border: "1px solid #444", borderRadius: 8, padding: "10px 12px", color: "#888", fontSize: 16, cursor: "pointer" }}>📷</button>
+        <button onClick={() => fileRef.current?.click()} style={{ background: "#222", border: "1px solid #444", borderRadius: 8, padding: "10px 12px", color: "#888", fontSize: 16, cursor: "pointer" }}>{"\ud83d\udcf7"}</button>
         <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()} placeholder="Report to Tru..."
           style={{ flex: 1, background: "#111", border: "1px solid #333", borderRadius: 8, padding: "10px 12px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 13, outline: "none" }} />
         <button onClick={send} style={{ background: "#facc15", color: "#000", border: "none", borderRadius: 8, padding: "10px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>SEND</button>
@@ -791,29 +666,22 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
 
 /* ============ TAB BAR ============ */
 function TabBar({ view, setView, visited, wordClues, fragments, parisUnlocked, parisVisited }) {
-  const londonFrags = fragments.slice(0,3).filter(f=>f).length;
-  const parisFrags = fragments.slice(3,6).filter(f=>f).length;
+  const lf = fragments.slice(0,3).filter(f=>f).length;
+  const pf = fragments.slice(3,6).filter(f=>f).length;
   const showPuzzle = wordClues.length >= 4;
-  const londonBadge = (<span style={{ fontSize: 7, letterSpacing: 0 }}><span style={{ color: "#4ade80" }}>{visited.length}/5</span>{" · "}<span style={{ color: "#3b82f6" }}>{londonFrags}/3</span>{" · "}<span style={{ color: "#facc15" }}>{wordClues.length}/4</span></span>);
-  const parisBadge = (<span style={{ fontSize: 7, letterSpacing: 0 }}><span style={{ color: "#4ade80" }}>{parisVisited.length}/4</span>{" · "}<span style={{ color: "#3b82f6" }}>{parisFrags}/3</span></span>);
+  const lb = (<span style={{ fontSize: 7 }}><span style={{ color: "#4ade80" }}>{visited.length}/5</span>{" \u00b7 "}<span style={{ color: "#3b82f6" }}>{lf}/3</span>{" \u00b7 "}<span style={{ color: "#facc15" }}>{wordClues.length}/4</span></span>);
+  const pb = (<span style={{ fontSize: 7 }}><span style={{ color: "#4ade80" }}>{parisVisited.length}/4</span>{" \u00b7 "}<span style={{ color: "#3b82f6" }}>{pf}/3</span></span>);
   const tab = (id, label, color, badge, extra) => (
-    <button key={id} onClick={() => setView(id)} style={{
-      flex: 1, padding: "8px 2px", background: view === id ? "#111" : "transparent", border: "none",
-      borderBottom: view === id ? `2px solid ${color}` : "2px solid transparent",
-      color: view === id ? color : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700,
-      letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
-      ...(extra || {}),
-    }}>
-      <span>{label}</span>
-      {badge}
+    <button key={id} onClick={() => setView(id)} style={{ flex: 1, padding: "8px 2px", background: view === id ? "#111" : "transparent", border: "none", borderBottom: view === id ? `2px solid ${color}` : "2px solid transparent", color: view === id ? color : "#555", fontFamily: "monospace", fontSize: 9, fontWeight: 700, letterSpacing: 1, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, ...(extra || {}) }}>
+      <span>{label}</span>{badge}
     </button>
   );
   return (
     <div style={{ display: "flex", borderBottom: "1px solid #222", flexShrink: 0 }}>
-      {tab("chat", "🟢 TRU", "#4ade80", null)}
-      {tab("london", "LONDON", "#facc15", londonBadge)}
-      {showPuzzle && tab("puzzle", "⚠ PUZZLE", "#ef4444", parisUnlocked ? <span style={{ fontSize: 7, color: "#4ade80" }}>SOLVED</span> : null, !parisUnlocked ? { animation: "pulse 1.5s infinite" } : {})}
-      {parisUnlocked && tab("paris", "PARIS", "#f97316", parisBadge)}
+      {tab("chat", "\ud83d\udfe2 TRU", "#4ade80", null)}
+      {tab("london", "LONDON", "#facc15", lb)}
+      {showPuzzle && tab("puzzle", "\u26a0 PUZZLE", "#ef4444", parisUnlocked ? <span style={{ fontSize: 7, color: "#4ade80" }}>SOLVED</span> : null, !parisUnlocked ? { animation: "pulse 1.5s infinite" } : {})}
+      {parisUnlocked && tab("paris", "PARIS", "#f97316", pb)}
     </div>
   );
 }
@@ -833,59 +701,49 @@ export default function Home() {
   const [parisRevealDone, setParisRevealDone] = usePersist("oct_prd", false);
   const [puzzleNudgeSent, setPuzzleNudgeSent] = usePersist("oct_pns", false);
 
-  // Auto-send puzzle nudge when all 4 word clues AND all 3 London fragments collected (only once)
   useEffect(() => {
     const londonFragsDone = fragments.slice(0,3).every(f => f);
     if (wordClues.length >= 4 && londonFragsDone && !puzzleNudgeSent && phase === "active") {
       setPuzzleNudgeSent(true);
-      setTimeout(() => {
-        setMsgs(p => [...p, { role: "spy", text: "Agents — I've been studying these word clues. There's a pattern. Check the PUZZLE tab — try combining them. Sound them out.\n\n— Tru" }]);
-      }, 2000);
+      setTimeout(() => { setMsgs(p => [...p, { role: "spy", text: "Agents \u2014 I've been studying these word clues. There's a pattern. Check the PUZZLE tab \u2014 try combining them. Sound them out.\n\n\u2014 Tru" }]); }, 2000);
     }
   }, [wordClues.length, fragments, phase, puzzleNudgeSent]);
 
-  // When puzzle is solved, trigger Paris reveal flow
   useEffect(() => {
-    if (parisUnlocked && !parisRevealDone && phase === "active") {
-      setPhase("collectortaunt");
-    }
+    if (parisUnlocked && !parisRevealDone && phase === "active") { setPhase("parisreveal"); }
   }, [parisUnlocked]);
 
-  // Init welcome message
   useEffect(() => {
     if (phase === "active" && msgs.length === 0) {
-      setMsgs([{ role: "spy", text: "JAGUAR. OTTER. STINGRAY.\n\nYou're officially active.\n\nAct like tourists — check out the sites, eat good food. But at landmarks, check in with me.\n\nTell me where you are.\n\n— Tru" }]);
+      setMsgs([{ role: "spy", text: "JAGUAR. OTTER. STINGRAY.\n\nYou're officially active.\n\nAct like tourists \u2014 check out the sites, eat good food. But at landmarks, check in with me.\n\nTell me where you are.\n\n\u2014 Tru" }]);
     }
   }, [phase]);
 
-  const head = (<>
-    <Head><title>Operation Clocktower</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /></Head>
-    <style jsx global>{`*{margin:0;padding:0;box-sizing:border-box}html,body,#__next{height:100%;background:#0a0a0a}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
-  </>);
+  const head = (<><Head><title>Operation Clocktower</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /></Head><style jsx global>{`*{margin:0;padding:0;box-sizing:border-box}html,body,#__next{height:100%;background:#0a0a0a}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style></>);
   const wrap = c => <>{head}<div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>{c}</div></>;
 
   if (phase === "passcode") return wrap(<IS rk="pass" title="OPERATION CLOCKTOWER" subtitle="SECURE CHANNEL" prompt="ENTER MISSION CODE" placeholder="Mission code..." buttonText="ACCESS" errMsg="Invalid mission code." onSubmit={v => { if (v.trim().toUpperCase() === MC) { setPhase("intro"); return true; } return false; }} />);
 
-  if (phase === "intro") return wrap(<TS id="intro" lines={[{t:"OPERATION CLOCKTOWER",s:"header"},{t:"SECURE CHANNEL",s:"sub"},{t:"",s:"sp"},{t:"Incoming transmission...",s:"dim",delay:800},{t:"",s:"sp"},{t:"Hello, agents.",s:"normal",delay:500},{t:"",s:"sp"},{t:"My name is Tru.",s:"bold"},{t:"",s:"sp"},{t:"Some of you may know me from the City Spies.",s:"normal"},{t:"",s:"sp"},{t:"Now I need a new team.",s:"normal"},{t:"",s:"sp"},{t:"But first — I need to make sure you are who I think you are.",s:"bold"}]} onDone={() => setPhase("verify")} />);
+  if (phase === "intro") return wrap(<TS id="intro" lines={[{t:"OPERATION CLOCKTOWER",s:"header"},{t:"SECURE CHANNEL",s:"sub"},{t:"",s:"sp"},{t:"Incoming transmission...",s:"dim",delay:800},{t:"",s:"sp"},{t:"Hello, agents.",s:"normal",delay:500},{t:"",s:"sp"},{t:"My name is Tru.",s:"bold"},{t:"",s:"sp"},{t:"Some of you may know me from the City Spies.",s:"normal"},{t:"",s:"sp"},{t:"Now I need a new team.",s:"normal"},{t:"",s:"sp"},{t:"But first \u2014 I need to make sure you are who I think you are.",s:"bold"}]} onDone={() => setPhase("verify")} />);
 
   if (phase === "verify") { const q = VQS[vStep]; return wrap(<IS rk={`v${vStep}`} title="OPERATION CLOCKTOWER" subtitle="IDENTITY CHECK" prompt={`${q.name.toUpperCase()}, ANSWER THIS:\n${q.q}`} placeholder="Type your answer..." buttonText="VERIFY" errMsg="Verification failed." onSubmit={v => { if (fuzzy(v, q.a)) { setPhase(vStep === 0 ? "vc" : "vm"); if (vStep === 0) setVStep(1); return true; } return false; }} />); }
 
   if (phase === "vc") return wrap(
     <div onClick={() => setPhase("verify")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
-      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>✓ VERIFIED</div>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>{"\u2713"} VERIFIED</div>
       <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Cade.</div>
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, textAlign: "center", maxWidth: 300, marginTop: 8 }}>Enjoy Mark Day next year.</div>
-      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
+      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>
     </div>
   );
 
   if (phase === "vm") return wrap(
     <div onClick={() => setPhase("briefing")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
-      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>✓ VERIFIED</div>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>{"\u2713"} VERIFIED</div>
       <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Maggie.</div>
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, textAlign: "center", maxWidth: 300, marginTop: 8 }}>Keep working hard with Trish.</div>
       <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 16 }}>Both agents confirmed.</div>
-      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
+      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>
     </div>
   );
 
@@ -912,22 +770,20 @@ export default function Home() {
 
   if (phase === "calok") return wrap(
     <div onClick={() => setPhase("codenames")} style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, cursor: "pointer", userSelect: "none" }}>
-      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>✓ ALL AGENTS VERIFIED</div>
+      <div style={{ color: "#4ade80", fontFamily: "monospace", fontSize: 18, fontWeight: 700, letterSpacing: 3, marginBottom: 12 }}>{"\u2713"} ALL AGENTS VERIFIED</div>
       <div style={{ color: "#c8c8c8", fontFamily: "monospace", fontSize: 14, textAlign: "center", maxWidth: 300 }}>Welcome aboard, Callum.</div>
       <div style={{ color: "#888", fontFamily: "monospace", fontSize: 13, textAlign: "center", maxWidth: 300, marginTop: 8 }}>Good job beating Areeb in cards.</div>
       <div style={{ color: "#777", fontFamily: "monospace", fontSize: 12, marginTop: 16 }}>The team is complete.</div>
-      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE ▸</span></div>
+      <div style={{ marginTop: 30 }}><span style={{ color: "#555", fontFamily: "monospace", fontSize: 11, letterSpacing: 2, animation: "pulse 2s infinite" }}>TAP TO CONTINUE {"\u25b8"}</span></div>
     </div>
   );
 
   if (phase === "codenames") return wrap(<CodenameReveal onDone={() => setPhase("active")} />);
 
-  /* --- PARIS REVEAL FLOW: paris splash → collector taunt → paris locations --- */
   if (phase === "parisreveal") return wrap(<ParisReveal onDone={() => setPhase("collectortaunt")} />);
   if (phase === "collectortaunt") return wrap(<CollectorTaunt onDone={() => setPhase("parislocs")} />);
   if (phase === "parislocs") return wrap(<ParisLocsPreview onDone={() => { setParisRevealDone(true); setPhase("active"); setView("chat"); }} />);
 
-  /* --- ACTIVE (tabs) --- */
   if (phase === "active") return (<>{head}
     <div style={{ height: "100vh", background: "#0a0a0a", display: "flex", flexDirection: "column" }}>
       <TabBar view={view} setView={setView} visited={visited} wordClues={wordClues} fragments={fragments} parisUnlocked={parisUnlocked} parisVisited={parisVisited} />
