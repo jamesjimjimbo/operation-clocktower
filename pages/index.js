@@ -28,7 +28,7 @@ const PARIS_LOCS = [
 ];
 const WORD_MAP = {
   stpauls: { word: "CROSS", from: "St. Paul's" },
-  friend: { word: "ANT", from: "Friend's dinner" },
+  friend: { word: "AUNT", from: "Friend's dinner" },
   eye: { word: "EYE", from: "London Eye" },
   buckingham: { word: "FELL", from: "Buckingham Palace" },
 };
@@ -637,7 +637,7 @@ function Puzzle({ wordClues, onSolved, parisUnlocked }) {
   const [e1, setE1] = useState(false); const [e2, setE2] = useState(false);
   const [ad, setAd] = useState(false);
   const [linger, setLinger] = useState(false);
-  const p1 = wordClues.some(w => w.word === "CROSS") && wordClues.some(w => w.word === "ANT");
+  const p1 = wordClues.some(w => w.word === "CROSS") && wordClues.some(w => w.word === "AUNT");
   const p2 = wordClues.some(w => w.word === "EYE") && wordClues.some(w => w.word === "FELL");
   useEffect(() => { if (s1 && s2 && !parisUnlocked) { setTimeout(() => setAd(true), 1500); setTimeout(() => setLinger(true), 3500); } }, [s1, s2]);
   const c1 = () => { if (i1.trim().toLowerCase() === "croissant") { setS1(true); setE1(false); } else setE1(true); };
@@ -651,7 +651,7 @@ function Puzzle({ wordClues, onSolved, parisUnlocked }) {
           <div style={{ display: "flex", gap: 8, marginBottom: 10, justifyContent: "center" }}>
             <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>CROSS</span>
             <span style={{ color: "#555", fontSize: 15, alignSelf: "center" }}>+</span>
-            <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>ANT</span>
+            <span style={{ background: "#1a1a1a", border: "1px solid #facc15", borderRadius: 6, padding: "5px 10px", color: "#facc15", fontFamily: "monospace", fontSize: 15, fontWeight: 700 }}>AUNT</span>
           </div>
           {!s1 ? (<><div style={{ display: "flex", gap: 8 }}>
             <input value={i1} onChange={e => { setI1(e.target.value); setE1(false); }} onKeyDown={e => e.key === "Enter" && c1()} placeholder="Sound it out..." style={{ flex: 1, background: "#0a0a0a", border: e1 ? "1px solid #ef4444" : "1px solid #333", borderRadius: 8, padding: "9px", color: "#e0e0e0", fontFamily: "monospace", fontSize: 14, outline: "none", textAlign: "center" }} />
@@ -717,8 +717,8 @@ function Chat({ visited, setVisited, wordClues, setWordClues, fragments, setFrag
     if (l.includes("collector") && (l.includes("intercepted") || l.includes("took this") || l.includes("step ahead") || l.includes("got here first"))) {
       pending.push({ type: "collector", value: "\"I'm always a step ahead...\"" });
     }
-    if (l.includes("ant") && (l.includes("strip") || (l.includes("word clue") && l.includes("ant")) || (l.includes("word is") && l.includes("ant")) || l.includes("ant is a word clue") || l.includes("ant. that's a word clue") || l.includes("the word ant"))) {
-      if (!wordClues.some(w => w.word === "ANT")) { setWordClues(p => [...p, WORD_MAP.friend]); pending.push({ type: "word", value: "ANT" }); }
+    if (l.includes("aunt") && (l.includes("word clue") || l.includes("word is") || l.includes("aunt is a word clue") || l.includes("aunt. that's a word clue") || l.includes("the word aunt"))) {
+      if (!wordClues.some(w => w.word === "AUNT")) { setWordClues(p => [...p, WORD_MAP.friend]); pending.push({ type: "word", value: "AUNT" }); }
     }
     if (l.includes("word clue") || l.includes("word is")) {
       if (l.includes("cross") && !wordClues.some(w => w.word === "CROSS")) pending.push({ type: "word", value: "CROSS" });
