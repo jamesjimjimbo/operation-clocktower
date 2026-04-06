@@ -42,7 +42,7 @@ export default function Debug() {
       localStorage.setItem("oct_p", JSON.stringify("active"));
       localStorage.setItem("oct_bi", JSON.stringify(99));
       localStorage.setItem("oct_v", JSON.stringify(["bigben","tower","stpauls","buckingham","eye"]));
-      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
+      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"AUNT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
       localStorage.setItem("oct_f", JSON.stringify(["92","02","45","","",""]));
       localStorage.setItem("oct_pu", JSON.stringify(false));
       localStorage.setItem("oct_pv", JSON.stringify([]));
@@ -54,7 +54,7 @@ export default function Debug() {
       localStorage.setItem("oct_p", JSON.stringify("active"));
       localStorage.setItem("oct_bi", JSON.stringify(99));
       localStorage.setItem("oct_v", JSON.stringify(["bigben","tower","stpauls","buckingham","eye"]));
-      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
+      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"AUNT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
       localStorage.setItem("oct_f", JSON.stringify(["92","02","45","","",""]));
       localStorage.setItem("oct_pu", JSON.stringify(true));
       localStorage.setItem("oct_pv", JSON.stringify([]));
@@ -66,7 +66,7 @@ export default function Debug() {
       localStorage.setItem("oct_p", JSON.stringify("active"));
       localStorage.setItem("oct_bi", JSON.stringify(99));
       localStorage.setItem("oct_v", JSON.stringify(["bigben","tower","stpauls","buckingham","eye"]));
-      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
+      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"AUNT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
       localStorage.setItem("oct_f", JSON.stringify(["92","02","45","41","31",""]));
       localStorage.setItem("oct_pu", JSON.stringify(true));
       localStorage.setItem("oct_pv", JSON.stringify(["louvre","chapelle"]));
@@ -78,7 +78,7 @@ export default function Debug() {
       localStorage.setItem("oct_p", JSON.stringify("active"));
       localStorage.setItem("oct_bi", JSON.stringify(99));
       localStorage.setItem("oct_v", JSON.stringify(["bigben","tower","stpauls","buckingham","eye"]));
-      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"ANT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
+      localStorage.setItem("oct_w", JSON.stringify([{word:"CROSS",from:"St. Paul's"},{word:"AUNT",from:"Friend's dinner"},{word:"EYE",from:"London Eye"},{word:"FELL",from:"Buckingham Palace"}]));
       localStorage.setItem("oct_f", JSON.stringify(["92","02","45","41","31","98"]));
       localStorage.setItem("oct_pu", JSON.stringify(true));
       localStorage.setItem("oct_pv", JSON.stringify(["louvre","chapelle","arcdetriomphe","eiffel"]));
